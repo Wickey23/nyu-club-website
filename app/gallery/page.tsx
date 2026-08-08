@@ -1,0 +1,3 @@
+import { Footer, Header, PageHero } from "../components/SiteChrome";
+const labels=["La Gran Chocolatada","Community","Conversations","The Met","Culture","New York","Food","Friends","Celebrations"];
+export default function GalleryPage(){return <main><Header/><PageHero eyebrow="Gallery" title="Memories that connect us." subtitle="A curated archive of the people, events and experiences that make ¡Viva Perú! what it is."/><section className="page-section"><div className="wrap tabs"><b>All albums</b><span>Chocolatada</span><span>Conversations</span><span>Community</span></div><div className="wrap gallery-page-grid">{labels.map((label,i)=><article key={label} className={`g${i+1}`}><div/><span>{label}</span></article>)}</div></section><Footer/></main>}
