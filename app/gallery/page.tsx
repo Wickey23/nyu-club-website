@@ -1,40 +1,21 @@
 import { Footer, Header, PageHero } from "../components/SiteChrome";
 import { archiveEvents, galleryImages } from "../lib/clubMedia";
+import site from "../../content/site.json";
 
 const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"});
 
 export default function GalleryPage(){
   return <main><Header/><PageHero eyebrow="Gallery" title="Memories that connect us." subtitle="A sourced archive of the people, events and experiences that make ¡Viva Perú! what it is."/>
+    {site.gallery.length>0 && <section className="page-section"><div className="wrap gallery-intro"><div><span className="kicker">Club gallery</span><h2>Published by the board.</h2></div><p>Current photos and captions managed directly through the ¡Viva Perú! board CMS.</p></div><div className="wrap sourced-gallery">{site.gallery.map((item)=><article key={item.id} className="sourced-card"><div className="sourced-photo" style={photo(item.image)} role="img" aria-label={item.title}/><div className="sourced-copy"><span className="kicker">Club media</span><h2>{item.title}</h2><p>{item.description}</p>{item.sourceUrl&&<a href={item.sourceUrl} target="_blank" rel="noreferrer" className="source-link">Original source ↗</a>}</div></article>)}</div></section>}
+
     <section className="page-section">
       <div className="wrap gallery-intro">
         <div><span className="kicker">Verified club media</span><h2>Photos with their story attached.</h2></div>
-        <p>Every image below includes the event, date, source, and the description we could verify from the club's public posts. We preserve partial-source limitations instead of inventing captions.</p>
+        <p>Every image below includes the event, date, source, and the description we could verify from the club's public posts.</p>
       </div>
-
-      <div className="wrap sourced-gallery">
-        {galleryImages.map((item)=><article key={item.id} className="sourced-card">
-          <div className="sourced-photo" style={photo(item.src)} role="img" aria-label={item.alt}/>
-          <div className="sourced-copy">
-            <span className="kicker">{item.date}</span>
-            <h2>{item.title}</h2>
-            <h3>{item.event}</h3>
-            <p>{item.description}</p>
-            <a href={item.sourceUrl} target="_blank" rel="noreferrer" className="source-link">Source: {item.sourceLabel} ↗</a>
-          </div>
-        </article>)}
-      </div>
+      <div className="wrap sourced-gallery">{galleryImages.map((item)=><article key={item.id} className="sourced-card"><div className="sourced-photo" style={photo(item.src)} role="img" aria-label={item.alt}/><div className="sourced-copy"><span className="kicker">{item.date}</span><h2>{item.title}</h2><h3>{item.event}</h3><p>{item.description}</p><a href={item.sourceUrl} target="_blank" rel="noreferrer" className="source-link">Source: {item.sourceLabel} ↗</a></div></article>)}</div>
     </section>
 
-    <section className="archive-section">
-      <div className="wrap archive-head"><span className="kicker light">Club archive</span><h2>More events found in the public record.</h2><p>These event records are ready for their original photos when we surface or receive them.</p></div>
-      <div className="wrap archive-grid">
-        {archiveEvents.map((item)=><article key={item.title}>
-          <span className="kicker light">{item.date}</span>
-          <h3>{item.title}</h3>
-          <p>{item.description}</p>
-          <a href={item.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>
-        </article>)}
-      </div>
-    </section>
+    <section className="archive-section"><div className="wrap archive-head"><span className="kicker light">Club archive</span><h2>More events found in the public record.</h2><p>These event records are ready for original photos as the board adds them.</p></div><div className="wrap archive-grid">{archiveEvents.map((item)=><article key={item.title}><span className="kicker light">{item.date}</span><h3>{item.title}</h3><p>{item.description}</p><a href={item.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a></article>)}</div></section>
     <Footer/></main>;
 }
