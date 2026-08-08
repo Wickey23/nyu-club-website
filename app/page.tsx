@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Footer, Header } from "./components/SiteChrome";
 import { clubMedia } from "./lib/clubMedia";
-import site from "../content/site.json";
+import { siteContent as site } from "./lib/siteContent";
 
 const experiences = [
   ["Cultura","Peru in motion","Traditions, history, music, art and identity."],
