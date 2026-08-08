@@ -13,6 +13,14 @@ type SiteContent = {
   settings:{ clubName:string; shortName:string; email:string; instagram:string; linkedin:string };
 };
 
+const emptyContent: SiteContent = {
+  homepage:{ headline:"", description:"", heroImage:"", featuredEventId:"" },
+  events:[],
+  team:[],
+  gallery:[],
+  settings:{ clubName:"", shortName:"", email:"", instagram:"", linkedin:"" },
+};
+
 const tabs = ["Dashboard","Homepage","Events","Team","Gallery","Settings"] as const;
 type Tab = typeof tabs[number];
 
@@ -20,28 +28,34 @@ const blankEvent = (): EventItem => ({ id:`event-${Date.now()}`, title:"New even
 const blankMember = (): TeamItem => ({ id:`member-${Date.now()}`, name:"New board member", role:"Board Member", email:"", image:"" });
 
 export default function AdminDashboard({ adminEmail }: { adminEmail:string }) {
-  const [content,setContent] = useState<SiteContent|null>(null);
+  const [content,setContent] = useState<SiteContent>(emptyContent);
   const [tab,setTab] = useState<Tab>("Dashboard");
   const [message,setMessage] = useState("");
   const [saving,setSaving] = useState(false);
   const [loading,setLoading] = useState(true);
+  const [loadFailed,setLoadFailed] = useState(false);
 
   useEffect(()=>{(async()=>{
     const response=await fetch("/api/admin/content",{cache:"no-store"});
     const data=await response.json();
-    if(response.ok) setContent(data.content); else setMessage(data.error||"Unable to load CMS content.");
+    if(response.ok) {
+      setContent(data.content);
+      setLoadFailed(false);
+    } else {
+      setMessage(data.error||"Unable to load CMS content.");
+      setLoadFailed(true);
+    }
     setLoading(false);
   })()},[]);
 
-  const stats = useMemo(()=> content ? {
+  const stats = useMemo(()=>({
     events:content.events.length,
     published:content.events.filter((e)=>e.status==="published").length,
     team:content.team.length,
     photos:content.gallery.length,
-  } : {events:0,published:0,team:0,photos:0},[content]);
+  }),[content]);
 
   async function save() {
-    if(!content) return;
     setSaving(true); setMessage("Saving…");
     const response=await fetch("/api/admin/content",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(content)});
     const data=await response.json();
@@ -62,7 +76,7 @@ export default function AdminDashboard({ adminEmail }: { adminEmail:string }) {
   async function logout(){ await fetch("/api/admin/logout",{method:"POST"}); location.href="/admin/login"; }
 
   if(loading) return <main className="admin-loading">Loading board portal…</main>;
-  if(!content) return <main className="admin-loading">{message || "CMS unavailable."}</main>;
+  if(loadFailed) return <main className="admin-loading">{message || "CMS unavailable."}</main>;
 
   return <main className="cms-shell">
     <aside className="cms-sidebar">
