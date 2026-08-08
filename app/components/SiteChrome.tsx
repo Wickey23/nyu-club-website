@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const nav = [
   ["About", "/about"], ["Events", "/events"], ["Culture", "/culture"],
-  ["Community", "/#community"], ["Team", "/team"], ["Gallery", "/gallery"]
+  ["Community", "/community"], ["Team", "/team"], ["Gallery", "/gallery"]
 ] as const;
 
 export function Header() {
