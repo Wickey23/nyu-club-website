@@ -1,7 +1,12 @@
 import { Footer, Header, PageHero } from "../components/SiteChrome";
+import { clubMedia } from "../lib/clubMedia";
+
+const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"});
+
 const events=[
-  ["La Gran Chocolatada","Annual community celebration","December · Date TBA","Kimmel Center, NYU","cocoa"],
-  ["Ceviche Night","Food, culture & community","Date TBA","NYU · New York","ceviche"],
-  ["Conversación Musical","Artists, alumni & Peruvian voices","Date TBA","NYU · New York","music"]
-];
-export default function EventsPage(){return <main><Header/><PageHero eyebrow="Events" title="What's happening next." subtitle="Culture, community, food, music and conversations — all in one calendar."/><section className="page-section"><div className="wrap tabs"><b>Upcoming</b><span>Past</span><span>Calendar</span></div><div className="wrap event-list">{events.map(([title,tag,date,place,img])=><article key={title}><div className={`list-image ${img}`}/><div><span className="kicker">{tag}</span><h2>{title}</h2><p>{date}<br/>{place}</p><button className="btn outline">View details</button></div></article>)}</div></section><Footer/></main>}
+  ["Conversación Musical","Eva Ayllón × Daniela Darcourt","October 11, 2025","NYU · New York",clubMedia.conversation[0]],
+  ["La Gran Chocolatada","Annual community celebration","December · Date TBA","NYU · New York",clubMedia.conversation[2]],
+  ["Community & Culture","Socials, collaborations and Peruvian pride","More dates coming soon","NYU · New York",clubMedia.conversation[3]]
+] as const;
+
+export default function EventsPage(){return <main><Header/><PageHero eyebrow="Events" title="What's happening next." subtitle="Culture, community, food, music and conversations — all in one calendar."/><section className="page-section"><div className="wrap tabs"><b>Featured</b><span>Upcoming</span><span>Past</span></div><div className="wrap event-list">{events.map(([title,tag,date,place,img])=><article key={title}><div className="list-image" style={photo(img)}/><div><span className="kicker">{tag}</span><h2>{title}</h2><p>{date}<br/>{place}</p><button className="btn outline">View details</button></div></article>)}</div></section><Footer/></main>}
