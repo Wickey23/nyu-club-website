@@ -1,143 +1,26 @@
-const nav = ["About", "Events", "Culture", "Community", "Team", "Gallery"];
+import Link from "next/link";
+import { Footer, Header } from "./components/SiteChrome";
 
-export default function HomePage() {
-  return (
-    <main>
-      <header className="site-header">
-        <div className="shell nav">
-          <a className="brand" href="#top">¡VIVA PERÚ!</a>
-          <nav className="nav-links" aria-label="Primary navigation">
-            {nav.map((item) => <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>)}
-            <a className="nav-cta" href="#join">Join us</a>
-          </nav>
-        </div>
-      </header>
+const experiences = [
+  ["Cultura","Peru in motion","Traditions, history, music, art and identity."],
+  ["Comunidad","A place to belong","Socials, collaborations, gatherings and friendships."],
+  ["Gastronomía","Taste the story","Food-centered cultural experiences and shared tables."],
+  ["Conversaciones","Peruvian voices","Artists, alumni, community leaders and conversations."]
+];
 
-      <section className="hero" id="top">
-        <div className="shell hero-inner">
-          <div className="eyebrow">NYU Peruvian Student Association</div>
-          <h1 className="display">¡Viva Perú!</h1>
-          <p className="hero-copy">Peruvian culture. NYU community. Right in the heart of New York.</p>
-          <div className="hero-actions">
-            <a className="button primary" href="#join">Join our community</a>
-            <a className="button ghost" href="#events">Explore events →</a>
-          </div>
-        </div>
-      </section>
+export default function HomePage(){
+  return <main><Header/>
+    <section className="home-hero"><div className="hero-photo"/><div className="hero-shade"/><div className="wrap hero-content"><span className="kicker light">NYU Peruvian Student Association</span><h1>¡VIVA PERÚ!</h1><h2>Peruvian culture. NYU community.<br/>Right in the heart of New York.</h2><p>Celebrating Peru’s culture, history and traditions while building a home for Peruvian students, the diaspora, and everyone at NYU interested in discovering Peru.</p><div className="actions"><Link className="btn red" href="/join">Join our community</Link><Link className="btn outline-light" href="/events">Explore events →</Link></div></div></section>
 
-      <section className="identity-strip" aria-label="Organization highlights">
-        <div className="shell identity-grid">
-          <div className="identity-item"><strong>PERÚ × NYU</strong><span>Culture meets campus</span></div>
-          <div className="identity-item"><strong>EST. 2016</strong><span>Growing in New York City</span></div>
-          <div className="identity-item"><strong>NYC</strong><span>Our community beyond campus</span></div>
-          <div className="identity-item"><strong>ALL NYU</strong><span>Everyone is welcome</span></div>
-        </div>
-      </section>
+    <section className="stats"><div className="wrap stats-grid"><div><b>EST.<br/>2016</b></div><div><b>150+</b><span>Community members</span></div><div><b>NYU</b><span>New York City</span></div><div><b>OPEN</b><span>To the NYU community</span></div></div></section>
 
-      <section className="section white" id="about">
-        <div className="shell">
-          <div className="section-head">
-            <div><div className="eyebrow">Our community</div><h2 className="display">More than a club.</h2></div>
-            <p>A home for Peru at NYU — celebrating culture, building friendships, and creating connections across New York.</p>
-          </div>
-          <div className="community-grid">
-            <div className="photo-placeholder"><span>Club photography will be managed from /admin/media</span></div>
-            <div className="value-stack">
-              <div className="value-card"><h3>Culture</h3><p>Celebrate Peruvian and Andean heritage through music, food, history, art, and tradition.</p></div>
-              <div className="value-card"><h3>Community</h3><p>Connect Peruvians, the Peruvian diaspora, and students who simply want to discover the culture.</p></div>
-              <div className="value-card"><h3>Connection</h3><p>Build relationships across NYU and the wider Peruvian community of New York City.</p></div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="cream-section"><div className="wrap intro-grid"><div><span className="kicker">Our community</span><h2>More than a club.<br/>A home for Peru at NYU.</h2><p>We are a cultural and social community that connects Peruvians, the Peruvian diaspora, and friends of Peru across NYU and New York City.</p><Link className="btn outline" href="/about">Learn more about us</Link></div><div className="photo-card tall"><span>Club community photography</span></div><div className="pillars"><article><i>✦</i><div><h3>Culture</h3><p>Celebrate Peruvian and Andean heritage.</p></div></article><article><i>◎</i><div><h3>Community</h3><p>Connect with Peruvians, the diaspora and the NYU community.</p></div></article><article><i>↗</i><div><h3>Connection</h3><p>Build friendships and relationships across New York.</p></div></article></div></div></section>
 
-      <section className="section" id="events">
-        <div className="shell">
-          <div className="section-head">
-            <div><div className="eyebrow">Up next</div><h2 className="display">Come experience it.</h2></div>
-            <p>The featured event will be selected from the admin dashboard and updated automatically as programming changes.</p>
-          </div>
-          <article className="event-card">
-            <div className="event-meta"><span>FEATURED EVENT</span><span>DATE TBD</span><span>NYU · NEW YORK</span></div>
-            <div><h3 className="display">La Gran Chocolatada</h3><div className="hero-actions" style={{ marginTop: 28 }}><a className="button light" href="#">View event →</a></div></div>
-          </article>
-        </div>
-      </section>
+    <section className="cream-section pt0"><div className="wrap"><div className="section-title"><span className="kicker">Up next</span><h2>Come experience it.</h2></div><article className="feature-event"><div className="event-image cocoa"/><div className="event-copy"><span className="kicker light">Annual community celebration</span><h3>La Gran Chocolatada</h3><ul><li>December · Date TBA</li><li>6:30 PM · 9:00 PM</li><li>NYU · New York</li></ul><Link href="/events" className="btn red">View event</Link></div></article><Link className="text-link" href="/events">View all events →</Link></div></section>
 
-      <section className="section white" id="community">
-        <div className="shell">
-          <div className="section-head">
-            <div><div className="eyebrow">What we do</div><h2 className="display">Bring Peru to NYU.</h2></div>
-          </div>
-          <div className="card-grid">
-            <article className="editorial-card"><span className="eyebrow">01</span><div><h3 className="display">Cultura</h3><p>Traditions, history, music, art, and identity.</p></div></article>
-            <article className="editorial-card"><span className="eyebrow">02</span><div><h3 className="display">Comunidad</h3><p>Socials, collaborations, gatherings, and friendships.</p></div></article>
-            <article className="editorial-card"><span className="eyebrow">03</span><div><h3 className="display">Gastronomía</h3><p>Experiences centered around one of Peru's greatest cultural exports: its food.</p></div></article>
-            <article className="editorial-card"><span className="eyebrow">04</span><div><h3 className="display">Conversaciones</h3><p>Artists, alumni, community leaders, and Peruvian voices.</p></div></article>
-          </div>
-        </div>
-      </section>
+    <section className="cream-section" id="community"><div className="wrap"><div className="section-title"><span className="kicker">What we do</span><h2>Experiences that celebrate Peru.</h2></div><div className="experience-grid">{experiences.map(([title,sub,desc],i)=><article key={title}><div className={`experience-img exp${i+1}`}/><span className="kicker">{sub}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></div></section>
 
-      <section className="section red" id="culture">
-        <div className="shell">
-          <div className="section-head">
-            <div><div className="eyebrow">Discover Peru</div><h2 className="display">One country. Many worlds.</h2></div>
-            <p>A future editorial section for regional culture, traditions, stories, and club programming tied to each part of Peru.</p>
-          </div>
-          <div className="peru-regions">
-            <div className="region"><strong>Costa</strong><span>Lima · Ica · Trujillo · Piura</span></div>
-            <div className="region"><strong>Sierra</strong><span>Cusco · Arequipa · Ayacucho</span></div>
-            <div className="region"><strong>Selva</strong><span>Iquitos · Madre de Dios · Amazonía</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section white" id="gallery">
-        <div className="shell">
-          <div className="section-head">
-            <div><div className="eyebrow">Gallery</div><h2 className="display">This is ¡Viva Perú!</h2></div>
-            <p>Selected Instagram and club photography will become curated albums instead of a fragile live social-media embed.</p>
-          </div>
-          <div className="gallery-grid">
-            <div className="gallery-tile">Signature event</div>
-            <div className="gallery-tile">Community</div>
-            <div className="gallery-tile">Culture</div>
-            <div className="gallery-tile">New York City</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="team">
-        <div className="shell">
-          <div className="section-head">
-            <div><div className="eyebrow">Leadership</div><h2 className="display">Meet the people behind ¡Viva Perú!</h2></div>
-            <p>Board members, roles, portraits, bios, and leadership years will all be editable from the team manager.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section red" id="join">
-        <div className="shell join-wrap">
-          <div>
-            <div className="eyebrow">Join the community</div>
-            <h2 className="display">Peru is the connection. Community is the reason.</h2>
-            <p>Peruvian? Peruvian-American? Interested in the culture? Just looking for community? You are welcome here.</p>
-          </div>
-          <a className="button light" href="mailto:peru@nyu.edu">Join ¡Viva Perú!</a>
-        </div>
-      </section>
-
-      <footer className="footer">
-        <div className="shell">
-          <div className="footer-grid">
-            <div><h3>¡VIVA PERÚ!</h3><p>NYU Peruvian Student Association<br />New York University<br />New York, NY</p></div>
-            <div><div className="eyebrow">Explore</div><p>About<br />Events<br />Culture<br />Gallery</p></div>
-            <div><div className="eyebrow">Connect</div><p>@perunyu<br />LinkedIn<br />peru@nyu.edu</p></div>
-            <div><div className="eyebrow">Admin</div><p><a href="/admin">Content dashboard →</a></p></div>
-          </div>
-          <div className="footer-bottom">Made in New York. Con orgullo peruano.</div>
-        </div>
-      </footer>
-    </main>
-  );
+    <section className="join-banner"><div className="wrap join-grid"><div><span className="kicker light">Join the community</span><h2>Peru is the connection.<br/>Community is the reason.</h2><p>Peruvian? Peruvian-American? Interested in the culture? Just looking for community? You’re welcome here.</p><div className="actions"><Link className="btn white" href="/join">Join ¡Viva Perú!</Link><a className="btn outline-light" href="https://www.instagram.com/perunyu/">Follow us</a></div></div><div className="nyc-photo"><span>Peru × New York City</span></div></div></section>
+    <Footer/>
+  </main>;
 }
