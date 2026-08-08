@@ -6,14 +6,15 @@ const repo = "nyu-club-website";
 const path = "content/site.json";
 const api = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
-function headers(write = false) {
-  const token = process.env.GITHUB_CONTENT_TOKEN;
-  return {
+function headers(write = false): Record<string, string> {
+  const result: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...(write ? { "Content-Type": "application/json" } : {}),
   };
+  const token = process.env.GITHUB_CONTENT_TOKEN;
+  if (token) result.Authorization = `Bearer ${token}`;
+  if (write) result["Content-Type"] = "application/json";
+  return result;
 }
 
 async function getFile() {
