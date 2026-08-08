@@ -1,0 +1,3 @@
+import { Footer, Header, PageHero } from "../components/SiteChrome";
+const roles=["President","Vice President","Treasurer","Secretary","Marketing Director","Herencia Director"];
+export default function TeamPage(){return <main><Header/><PageHero eyebrow="Our team" title="The people behind ¡Viva Perú!" subtitle="Meet the student leaders building community, programming and culture at NYU."/><section className="page-section"><div className="wrap"><span className="kicker">Executive board · Current year</span><div className="team-grid">{roles.map((role,i)=><article key={role}><div className={`portrait p${i+1}`}/><h3>Board Member</h3><p>{role}</p></article>)}</div></div></section><Footer/></main>}
