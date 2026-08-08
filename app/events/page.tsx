@@ -1,12 +1,9 @@
 import { Footer, Header, PageHero } from "../components/SiteChrome";
-import { clubMedia } from "../lib/clubMedia";
+import site from "../../content/site.json";
 
 const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"});
 
-const events=[
-  ["Conversación Musical","Eva Ayllón × Daniela Darcourt","October 11, 2025","NYU · New York",clubMedia.conversation[0]],
-  ["La Gran Chocolatada","Annual community celebration","December · Date TBA","NYU · New York",clubMedia.conversation[2]],
-  ["Community & Culture","Socials, collaborations and Peruvian pride","More dates coming soon","NYU · New York",clubMedia.conversation[3]]
-] as const;
-
-export default function EventsPage(){return <main><Header/><PageHero eyebrow="Events" title="What's happening next." subtitle="Culture, community, food, music and conversations — all in one calendar."/><section className="page-section"><div className="wrap tabs"><b>Featured</b><span>Upcoming</span><span>Past</span></div><div className="wrap event-list">{events.map(([title,tag,date,place,img])=><article key={title}><div className="list-image" style={photo(img)}/><div><span className="kicker">{tag}</span><h2>{title}</h2><p>{date}<br/>{place}</p><button className="btn outline">View details</button></div></article>)}</div></section><Footer/></main>}
+export default function EventsPage(){
+  const events=[...site.events].sort((a,b)=>a.date.localeCompare(b.date));
+  return <main><Header/><PageHero eyebrow="Events" title="What's happening next." subtitle="Culture, community, food, music and conversations — all in one calendar."/><section className="page-section"><div className="wrap tabs"><b>Events</b><span>Published by the board</span></div><div className="wrap event-list">{events.map((event)=><article key={event.id}><div className="list-image" style={event.image?photo(event.image):undefined}/><div><span className="kicker">{event.status}</span><h2>{event.title}</h2><p>{event.date}{event.time?` · ${event.time}`:""}<br/>{event.location}</p><p>{event.description}</p>{event.rsvpUrl?<a className="btn outline" href={event.rsvpUrl} target="_blank" rel="noreferrer">RSVP</a>:null}</div></article>)}</div></section><Footer/></main>
+}
