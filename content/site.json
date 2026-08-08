@@ -1,0 +1,34 @@
+{
+  "homepage": {
+    "headline": "Peruvian culture. NYU community. Right in the heart of New York.",
+    "description": "Celebrating Peru’s culture, history and traditions while building a home for Peruvian students, the diaspora, and everyone at NYU interested in discovering Peru.",
+    "heroImage": "https://media.licdn.com/dms/image/v2/D4E22AQE-CAE0ToYQGA/feedshare-shrink_800/B4EZoydz1sKgAg-/0/1761783269826?e=2147483647&t=qfYhZSfYCH0TftzR6PnuiVxipSH0gBeKxGrMqrlvEbk&v=beta",
+    "featuredEventId": "chocolatada"
+  },
+  "events": [
+    {
+      "id": "chocolatada",
+      "title": "La Gran Chocolatada",
+      "date": "2026-12-01",
+      "time": "18:30",
+      "location": "NYU · New York",
+      "description": "Annual community celebration centered on Peruvian tradition, food and connection.",
+      "image": "https://media.licdn.com/dms/image/v2/D4E22AQHzmvopsJFE7A/feedshare-image-high-res/B4EZoydz2EKMAo-/0/1761783271995?e=2147483647&t=PviuMkp4kJT9ojsU9eyO8mQlErU0kE4cUcYGFyimtSo&v=beta",
+      "rsvpUrl": "",
+      "status": "draft"
+    }
+  ],
+  "team": [
+    { "id": "president", "name": "Board Member", "role": "President", "email": "", "image": "" },
+    { "id": "vice-president", "name": "Board Member", "role": "Vice President", "email": "", "image": "" },
+    { "id": "treasurer", "name": "Board Member", "role": "Treasurer", "email": "", "image": "" }
+  ],
+  "gallery": [],
+  "settings": {
+    "clubName": "NYU Peruvian Student Association",
+    "shortName": "¡Viva Perú!",
+    "email": "peru@nyu.edu",
+    "instagram": "https://www.instagram.com/perunyu/",
+    "linkedin": "https://www.linkedin.com/company/nyuperu"
+  }
+}
