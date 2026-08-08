@@ -1,6 +1,6 @@
 import { Footer, Header, PageHero } from "../components/SiteChrome";
 import { archiveEvents, galleryImages } from "../lib/clubMedia";
-import site from "../../content/site.json";
+import { siteContent as site } from "../lib/siteContent";
 
 const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"});
 
