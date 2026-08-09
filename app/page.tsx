@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Footer, Header } from "./components/SiteChrome";
 import HomeMediaShowcase from "./components/HomeMediaShowcase";
 import NewsletterSignup from "./components/NewsletterSignup";
-import { clubMedia } from "./lib/clubMedia";
+import { clubMedia, galleryImages } from "./lib/clubMedia";
 import { getLiveSiteContent } from "./lib/liveSiteContent";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ export default async function HomePage(){
   const heroImage = site.homepage.heroImage || clubMedia.conversation[1];
   const carouselSlides = site.gallery.length
     ? site.gallery.slice(0,8).map(item=>({image:item.image,title:item.title,description:item.description}))
-    : [...clubMedia.conversation,...clubMedia.board].slice(0,8).map((image,index)=>({image,title:index===0?"¡Viva Perú! community":"NYU Peruvian Student Association",description:"Culture, community and connection across NYU and New York City."}));
+    : galleryImages.slice(0,8).map(item=>({image:item.image,title:item.title,description:item.description}));
 
   return <main><Header/>
     <section className="home-hero"><div className="hero-photo" style={photo(heroImage,"center 38%")}/><div className="hero-shade"/><div className="wrap hero-content"><span className="kicker light">{site.settings.clubName}</span><h1>{site.settings.shortName.toUpperCase()}</h1><h2>{site.homepage.headline}</h2><p>{site.homepage.description}</p><div className="actions"><Link className="btn red" href="/join">Join our community</Link><Link className="btn outline-light" href="/events">Explore events →</Link></div></div></section>
