@@ -4,6 +4,7 @@ import HomeMediaShowcase from "./components/HomeMediaShowcase";
 import NewsletterSignup from "./components/NewsletterSignup";
 import { clubMedia, galleryImages } from "./lib/clubMedia";
 import { getLiveSiteContent } from "./lib/liveSiteContent";
+import { galleryImageUrl } from "./lib/mediaUrl";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +20,9 @@ export default async function HomePage(){
   const site = await getLiveSiteContent();
   const featured = site.events.find((e)=>e.id===site.homepage.featuredEventId) || site.events.find((e)=>e.status==="published");
   const heroImage = site.homepage.heroImage || clubMedia.conversation[1];
-  const carouselSlides = site.gallery.length
-    ? site.gallery.slice(0,8).map(item=>({image:item.image,title:item.title,description:item.description}))
+  const publishedImages = site.gallery.filter(item=>item.mediaType!=="video");
+  const carouselSlides = publishedImages.length
+    ? publishedImages.slice(0,8).map(item=>({image:galleryImageUrl(item.image),title:item.title,description:item.description}))
     : galleryImages.slice(0,8).map(item=>({image:item.image,title:item.title,description:item.description}));
 
   return <main><Header/>
