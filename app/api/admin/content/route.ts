@@ -7,7 +7,7 @@ type EventItem = { id:string; title:string; date:string; time:string; location:s
 type TeamItem = { id:string; name:string; role:string; email:string; image:string };
 type GalleryItem = { id:string; title:string; image:string; description:string; sourceUrl?:string };
 type SiteContent = {
-  homepage:{ headline:string; description:string; heroImage:string; featuredEventId:string };
+  homepage:{ headline:string; description:string; heroImage:string; featuredEventId:string; videoUrl?:string; videoPosterUrl?:string; secondaryVideoUrl?:string; secondaryVideoPosterUrl?:string };
   events:EventItem[];
   team:TeamItem[];
   gallery:GalleryItem[];
@@ -24,7 +24,7 @@ async function adminContext() {
 
 async function loadContent(supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>): Promise<SiteContent> {
   const [homeResult,eventResult,teamResult,galleryResult,settingsResult] = await Promise.all([
-    supabase.from("homepage_content").select("headline,description,hero_image,featured_event_id").eq("id",1).single(),
+    supabase.from("homepage_content").select("headline,description,hero_image,featured_event_id,video_url,video_poster_url,secondary_video_url,secondary_video_poster_url").eq("id",1).single(),
     supabase.from("events").select("id,title,event_date,start_time,location,description,image_url,rsvp_url,status").order("event_date",{ascending:false,nullsFirst:false}),
     supabase.from("team_members").select("id,name,title,email,image_url,sort_order").order("sort_order",{ascending:true}),
     supabase.from("gallery_items").select("id,title,image_url,caption,source_url,sort_order").order("sort_order",{ascending:true}),
@@ -41,6 +41,10 @@ async function loadContent(supabase: Awaited<ReturnType<typeof createSupabaseSer
       description:home.description,
       heroImage:home.hero_image,
       featuredEventId:home.featured_event_id || "",
+      videoUrl:home.video_url || "",
+      videoPosterUrl:home.video_poster_url || "",
+      secondaryVideoUrl:home.secondary_video_url || "",
+      secondaryVideoPosterUrl:home.secondary_video_poster_url || "",
     },
     events:(eventResult.data||[]).map((item)=>({
       id:item.id,
@@ -74,7 +78,7 @@ async function reconcileEvents(supabase: Awaited<ReturnType<typeof createSupabas
   const { data: existing } = await supabase.from("events").select("id");
   const keep = new Set<string>();
   const idMap = new Map<string,string>();
-  for (const [index,item] of items.entries()) {
+  for (const item of items) {
     const payload = {
       title:item.title || "Untitled event",
       event_date:item.date || null,
@@ -95,7 +99,6 @@ async function reconcileEvents(supabase: Awaited<ReturnType<typeof createSupabas
       if (error) throw error;
       keep.add(data.id); idMap.set(item.id,data.id);
     }
-    void index;
   }
   for (const row of existing||[]) if (!keep.has(row.id)) {
     const { error } = await supabase.from("events").delete().eq("id",row.id);
@@ -146,7 +149,17 @@ export async function PUT(request: Request) {
 
     if (["super_admin","admin"].includes(role)) {
       const featured = content.homepage.featuredEventId ? (eventIdMap.get(content.homepage.featuredEventId) || (uuidPattern.test(content.homepage.featuredEventId) ? content.homepage.featuredEventId : null)) : null;
-      const { error:homeError } = await supabase.from("homepage_content").update({ headline:content.homepage.headline,description:content.homepage.description,hero_image:content.homepage.heroImage,featured_event_id:featured,updated_by:user.id }).eq("id",1);
+      const { error:homeError } = await supabase.from("homepage_content").update({
+        headline:content.homepage.headline,
+        description:content.homepage.description,
+        hero_image:content.homepage.heroImage,
+        featured_event_id:featured,
+        video_url:content.homepage.videoUrl || "",
+        video_poster_url:content.homepage.videoPosterUrl || "",
+        secondary_video_url:content.homepage.secondaryVideoUrl || "",
+        secondary_video_poster_url:content.homepage.secondaryVideoPosterUrl || "",
+        updated_by:user.id,
+      }).eq("id",1);
       if (homeError) throw homeError;
       const { error:settingsError } = await supabase.from("site_settings").update({ club_name:content.settings.clubName,short_name:content.settings.shortName,email:content.settings.email,instagram:content.settings.instagram,linkedin:content.settings.linkedin,updated_by:user.id }).eq("id",1);
       if (settingsError) throw settingsError;
