@@ -19,5 +19,5 @@ export default async function AdminPage() {
     redirect("/admin/login?error=not-authorized");
   }
 
-  return <AdminDashboard adminEmail={profile.email || user.email || ""} adminRole={profile.role} />;
+  return <AdminDashboard adminEmail={profile.email || user.email || ""} />;
 }
