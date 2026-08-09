@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "../lib/supabase/server";
 import AdminDashboard from "./AdminDashboard";
 
-const allowedRoles = new Set(["super_admin", "admin", "events_manager", "media_manager", "team_manager"]);
+const allowedRoles = new Set(["super_admin", "admin", "events_manager", "media_manager", "team_manager", "viewer"]);
 
 export default async function AdminPage() {
   const supabase = await createSupabaseServerClient();
