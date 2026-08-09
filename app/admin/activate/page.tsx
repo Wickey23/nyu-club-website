@@ -14,14 +14,27 @@ export default function AdminActivatePage() {
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-    supabase.auth.getSession().then(({ data }) => {
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const tokenHash = params.get("token_hash");
+      const type = params.get("type");
+
+      if (tokenHash && (type === "invite" || type === "recovery" || type === "magiclink" || type === "email" || type === "signup")) {
+        const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as "invite" | "recovery" | "magiclink" | "email" | "signup" });
+        if (error) {
+          setMessage("This activation link is invalid or has expired. Request a new invitation.");
+          return;
+        }
+      }
+
+      const { data } = await supabase.auth.getSession();
       if (data.session) {
         setReady(true);
         setMessage("Create a password for your board account.");
       } else {
-        setMessage("Open this page from the invitation or password-reset email so your secure session can be verified.");
+        setMessage("Open this page from a valid invitation or password-reset link so your secure session can be verified.");
       }
-    });
+    })();
   }, []);
 
   async function submit(event: FormEvent) {
