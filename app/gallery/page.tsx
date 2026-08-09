@@ -5,6 +5,7 @@ import { galleryImageUrl, galleryVideoEmbedUrl, isGoogleDriveUrl } from "../lib/
 
 export const dynamic = "force-dynamic";
 const photo=(src:string,position="center")=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:position,backgroundRepeat:"no-repeat"});
+const videoStyle={width:"100%",aspectRatio:"16 / 9",display:"block",border:0,background:"#111"} as const;
 
 export default async function GalleryPage(){
   const site=await getLiveSiteContent();
@@ -14,8 +15,8 @@ export default async function GalleryPage(){
       const mediaUrl=video?galleryVideoEmbedUrl(item.image):galleryImageUrl(item.image);
       return <article key={item.id} className="sourced-card">
         {video ? (isGoogleDriveUrl(item.image)
-          ? <iframe className="sourced-video" src={mediaUrl} title={item.title} allow="autoplay; fullscreen" allowFullScreen/>
-          : <video className="sourced-video" src={mediaUrl} controls playsInline preload="metadata"/>)
+          ? <iframe src={mediaUrl} title={item.title} allow="autoplay; fullscreen" allowFullScreen style={videoStyle}/>
+          : <video src={mediaUrl} controls playsInline preload="metadata" style={videoStyle}/>)
           : <div className="sourced-photo" style={photo(mediaUrl)} role="img" aria-label={item.title}/>} 
         <div className="sourced-copy"><span className="kicker">Club media · {video?"Video":"Photo"}</span><h2>{item.title}</h2><p>{item.description}</p>{item.sourceUrl&&<a href={item.sourceUrl} target="_blank" rel="noreferrer" className="source-link">Original source ↗</a>}</div>
       </article>})}</div></section>}
