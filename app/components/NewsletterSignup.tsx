@@ -62,6 +62,21 @@ export default function NewsletterSignup() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [shortName, setShortName] = useState("NYU Perú");
+  const [clubName, setClubName] = useState("NYU Peruvian Student Association");
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    void supabase
+      .from("site_settings")
+      .select("short_name,club_name")
+      .eq("id", 1)
+      .single()
+      .then(({ data }) => {
+        if (data?.short_name) setShortName(data.short_name);
+        if (data?.club_name) setClubName(data.club_name);
+      });
+  }, []);
 
   useEffect(() => {
     if (window.localStorage.getItem(dismissedKey)) return;
@@ -81,7 +96,7 @@ export default function NewsletterSignup() {
     });
     setLoading(false);
     if (error) return setMessage(error.message || "Unable to subscribe right now.");
-    setMessage("You’re on the list. Watch your inbox for ¡Viva Perú! updates.");
+    setMessage(`You’re on the list. Watch your inbox for ${shortName} updates.`);
     setEmail("");
     setName("");
     window.localStorage.setItem(dismissedKey, "subscribed");
@@ -109,16 +124,16 @@ export default function NewsletterSignup() {
         <div className="newsletter-copy">
           <span className="kicker">Stay connected</span>
           <h2>Peru in your inbox.</h2>
-          <p>Get upcoming events, collaborations, cultural programming and community updates from the NYU Peruvian Student Association.</p>
+          <p>Get upcoming events, collaborations, cultural programming and community updates from {clubName}.</p>
         </div>
         <div className="newsletter-card"><NewsletterForm source="homepage-inline" {...formProps} /></div>
       </div>
     </section>
 
-    {open && <div className="newsletter-popup-wrap" role="dialog" aria-modal="true" aria-label="Join the ¡Viva Perú! newsletter">
+    {open && <div className="newsletter-popup-wrap" role="dialog" aria-modal="true" aria-label={`Join the ${shortName} newsletter`}>
       <section className="newsletter-popup">
         <button className="newsletter-close" onClick={dismiss} aria-label="Dismiss newsletter signup">×</button>
-        <span className="kicker">¡Viva Perú! updates</span>
+        <span className="kicker">{shortName} updates</span>
         <h2>Don’t miss what’s next.</h2>
         <p>Join the club newsletter for event announcements and community updates.</p>
         <NewsletterForm source="homepage-popup" {...formProps} />
