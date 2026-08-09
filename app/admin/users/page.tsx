@@ -8,7 +8,7 @@ export default async function UsersPage() {
   if (!user) redirect("/admin/login");
 
   const { data: profile } = await supabase.from("profiles").select("role,status").eq("id", user.id).single();
-  if (!profile || profile.status === "disabled" || profile.role !== "super_admin") redirect("/admin");
+  if (!profile || profile.status === "disabled" || !["super_admin","admin"].includes(profile.role)) redirect("/admin");
 
-  return <UsersAccess />;
+  return <UsersAccess actorRole={profile.role as "super_admin"|"admin"} />;
 }
