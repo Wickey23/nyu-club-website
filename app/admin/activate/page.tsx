@@ -14,25 +14,58 @@ export default function AdminActivatePage() {
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
+
     (async () => {
-      const params = new URLSearchParams(window.location.search);
-      const tokenHash = params.get("token_hash");
-      const type = params.get("type");
+      try {
+        const search = new URLSearchParams(window.location.search);
+        const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
 
-      if (tokenHash && (type === "invite" || type === "recovery" || type === "magiclink" || type === "email" || type === "signup")) {
-        const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as "invite" | "recovery" | "magiclink" | "email" | "signup" });
-        if (error) {
-          setMessage("This activation link is invalid or has expired. Request a new invitation.");
-          return;
+        const code = search.get("code");
+        const tokenHash = search.get("token_hash");
+        const queryType = search.get("type");
+        const hashType = hash.get("type");
+        const accessToken = hash.get("access_token");
+        const refreshToken = hash.get("refresh_token");
+
+        // PKCE flow used by Supabase SSR/Auth.
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) throw error;
         }
-      }
+        // Email OTP/token-hash flow.
+        else if (
+          tokenHash &&
+          (queryType === "invite" || queryType === "recovery" || queryType === "magiclink" || queryType === "email" || queryType === "signup")
+        ) {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: queryType as "invite" | "recovery" | "magiclink" | "email" | "signup",
+          });
+          if (error) throw error;
+        }
+        // Legacy/implicit flow: credentials are delivered in the URL fragment.
+        else if (accessToken && refreshToken && (hashType === "invite" || hashType === "recovery" || !hashType)) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+          if (error) throw error;
+        }
 
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setReady(true);
-        setMessage("Create a password for your board account.");
-      } else {
-        setMessage("Open this page from a valid invitation or password-reset link so your secure session can be verified.");
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+
+        if (data.session) {
+          // Strip invite credentials from the visible URL once consumed.
+          window.history.replaceState({}, document.title, "/admin/activate");
+          setReady(true);
+          setMessage("Create a password for your board account.");
+        } else {
+          setMessage("This invitation did not create a secure session. Open the newest invitation email and try again.");
+        }
+      } catch (error) {
+        console.error("Activation error", error);
+        setMessage("This activation link is invalid or has expired. Request a new invitation.");
       }
     })();
   }, []);
@@ -41,6 +74,7 @@ export default function AdminActivatePage() {
     event.preventDefault();
     if (password.length < 8) return setMessage("Use a password with at least 8 characters.");
     if (password !== confirm) return setMessage("The passwords do not match.");
+
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -48,16 +82,19 @@ export default function AdminActivatePage() {
       setLoading(false);
       return setMessage("Your invitation session has expired. Ask the Super Admin to resend the invitation.");
     }
+
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       setLoading(false);
       return setMessage(error.message);
     }
+
     const { error: activateError } = await supabase.rpc("activate_own_board_profile");
     if (activateError) {
       setLoading(false);
       return setMessage(activateError.message);
     }
+
     setLoading(false);
     router.push("/admin");
     router.refresh();
@@ -65,7 +102,7 @@ export default function AdminActivatePage() {
 
   return <main className="admin-login-page">
     <section className="admin-login-card">
-      <img src="/nyu-peruvian-logo.webp" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
+      <img src="/nyu-peruvian-logo-v4.svg" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
       <span className="admin-kicker">Board invitation</span>
       <h1>Activate your account</h1>
       <p>{message}</p>
