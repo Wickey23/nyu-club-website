@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "../../lib/supabase/client";
+import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function AdminLoginPage() {
   async function submit(event: FormEvent) {
     event.preventDefault();
     setLoading(true); setError("");
-    const supabase = createClient();
+    const supabase = createSupabaseBrowserClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     setLoading(false);
     if (signInError) return setError(signInError.message);
@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
   async function resetPassword() {
     if (!email.trim()) return setError("Enter your email first.");
     setLoading(true); setError("");
-    const supabase = createClient();
+    const supabase = createSupabaseBrowserClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
       redirectTo: `${window.location.origin}/admin/activate`,
     });
