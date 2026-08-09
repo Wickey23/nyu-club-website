@@ -3,6 +3,7 @@ import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import "./gallery-extra.css";
 import "./home-media.css";
+import "./home-responsive.css";
 
 const sans = DM_Sans({
   subsets: ["latin"],
