@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Footer, Header } from "./components/SiteChrome";
+import HomeMediaShowcase from "./components/HomeMediaShowcase";
 import NewsletterSignup from "./components/NewsletterSignup";
 import { clubMedia } from "./lib/clubMedia";
 import { getLiveSiteContent } from "./lib/liveSiteContent";
@@ -18,12 +19,24 @@ export default async function HomePage(){
   const site = await getLiveSiteContent();
   const featured = site.events.find((e)=>e.id===site.homepage.featuredEventId) || site.events.find((e)=>e.status==="published");
   const heroImage = site.homepage.heroImage || clubMedia.conversation[1];
+  const carouselSlides = site.gallery.length
+    ? site.gallery.slice(0,8).map(item=>({image:item.image,title:item.title,description:item.description}))
+    : [...clubMedia.conversation,...clubMedia.board].slice(0,8).map((image,index)=>({image,title:index===0?"¡Viva Perú! community":"NYU Peruvian Student Association",description:"Culture, community and connection across NYU and New York City."}));
+
   return <main><Header/>
     <section className="home-hero"><div className="hero-photo" style={photo(heroImage,"center 38%")}/><div className="hero-shade"/><div className="wrap hero-content"><span className="kicker light">{site.settings.clubName}</span><h1>{site.settings.shortName.toUpperCase()}</h1><h2>{site.homepage.headline}</h2><p>{site.homepage.description}</p><div className="actions"><Link className="btn red" href="/join">Join our community</Link><Link className="btn outline-light" href="/events">Explore events →</Link></div></div></section>
 
-    <section className="stats"><div className="wrap stats-grid"><div><b>EST.<br/>2016</b></div><div><b>150+</b><span>Community members</span></div><div><b>NYU</b><span>New York City</span></div><div><b>OPEN</b><span>To the NYU community</span></div></div></section>
+    <section className="stats"><div className="wrap stats-grid"><div><b>EST.<br/>2016</b></div><div><b>NYU</b><span>Student community</span></div><div><b>NYC</b><span>Culture across the city</span></div><div><b>OPEN</b><span>To the NYU community</span></div></div></section>
 
     <section className="cream-section"><div className="wrap intro-grid"><div><span className="kicker">Our community</span><h2>More than a club.<br/>A home for Peru at NYU.</h2><p>We are a cultural and social community that connects Peruvians, the Peruvian diaspora, and friends of Peru across NYU and New York City.</p><Link className="btn outline" href="/about">Learn more about us</Link></div><div className="photo-card tall" style={photo(clubMedia.conversation[2])}><span>Community at ¡Viva Perú!</span></div><div className="pillars"><article><i>✦</i><div><h3>Culture</h3><p>Celebrate Peruvian and Andean heritage.</p></div></article><article><i>◎</i><div><h3>Community</h3><p>Connect with Peruvians, the diaspora and the NYU community.</p></div></article><article><i>↗</i><div><h3>Connection</h3><p>Build friendships and relationships across New York.</p></div></article></div></div></section>
+
+    <HomeMediaShowcase
+      slides={carouselSlides}
+      primaryVideoUrl={site.homepage.videoUrl}
+      primaryPosterUrl={site.homepage.videoPosterUrl || clubMedia.conversation[0]}
+      secondaryVideoUrl={site.homepage.secondaryVideoUrl}
+      secondaryPosterUrl={site.homepage.secondaryVideoPosterUrl || clubMedia.conversation[3]}
+    />
 
     {featured && <section className="cream-section pt0"><div className="wrap"><div className="section-title"><span className="kicker">Featured event</span><h2>Come experience it.</h2></div><article className="feature-event"><div className="event-image" style={photo(featured.image || clubMedia.conversation[0])}/><div className="event-copy"><span className="kicker light">Upcoming</span><h3>{featured.title}</h3><p>{featured.description}</p><ul>{featured.date&&<li>{featured.date}</li>}{featured.time&&<li>{featured.time}</li>}<li>{featured.location}</li></ul><Link href="/events" className="btn red">View events</Link></div></article><Link className="text-link" href="/events">View all events →</Link></div></section>}
 
