@@ -19,7 +19,7 @@ const permissions = [
   {role:"Events Manager",scope:"Events only",details:"Create, edit, publish and remove events. No access to team, gallery, settings, newsletter or users."},
   {role:"Media Manager",scope:"Gallery only",details:"Manage gallery images/videos and media. No access to events, team, settings, newsletter or users."},
   {role:"Team Manager",scope:"Team only",details:"Manage public board/team profiles. No access to events, gallery, settings, newsletter or users."},
-  {role:"Viewer",scope:"Read-only access",details:"Can sign in and view permitted admin information but cannot change site content or access roles."},
+  {role:"Viewer",scope:"No CMS editing",details:"Account can remain authorized in the directory but cannot enter the CMS editor or change site content, newsletters, settings or roles."},
 ];
 
 export default function UsersAccess({actorRole}:{actorRole:"super_admin"|"admin"}){
