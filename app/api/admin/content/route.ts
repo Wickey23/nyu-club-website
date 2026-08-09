@@ -5,7 +5,7 @@ const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}
 
 type EventItem = { id:string; title:string; date:string; time:string; location:string; description:string; image:string; rsvpUrl:string; status:string };
 type TeamItem = { id:string; name:string; role:string; email:string; image:string };
-type GalleryItem = { id:string; title:string; image:string; description:string; sourceUrl?:string; mediaType?:"image"|"video" };
+type GalleryItem = { id:string; title:string; image:string; description:string; sourceUrl?:string; mediaType?:"image"|"video"; createdAt?:string };
 type SiteContent = {
   homepage:{ headline:string; description:string; heroImage:string; featuredEventId:string; videoUrl?:string; videoPosterUrl?:string; secondaryVideoUrl?:string; secondaryVideoPosterUrl?:string };
   events:EventItem[];
@@ -27,7 +27,7 @@ async function loadContent(supabase: Awaited<ReturnType<typeof createSupabaseSer
     supabase.from("homepage_content").select("headline,description,hero_image,featured_event_id,video_url,video_poster_url,secondary_video_url,secondary_video_poster_url").eq("id",1).single(),
     supabase.from("events").select("id,title,event_date,start_time,location,description,image_url,rsvp_url,status").order("event_date",{ascending:false,nullsFirst:false}),
     supabase.from("team_members").select("id,name,title,email,image_url,sort_order").order("sort_order",{ascending:true}),
-    supabase.from("gallery_items").select("id,title,image_url,caption,source_url,media_type,sort_order").order("sort_order",{ascending:true}),
+    supabase.from("gallery_items").select("id,title,image_url,caption,source_url,media_type,sort_order,created_at").order("sort_order",{ascending:true}),
     supabase.from("site_settings").select("club_name,short_name,email,instagram,linkedin").eq("id",1).single(),
   ]);
 
@@ -58,7 +58,7 @@ async function loadContent(supabase: Awaited<ReturnType<typeof createSupabaseSer
       status:item.status,
     })),
     team:(teamResult.data||[]).map((item)=>({ id:item.id,name:item.name,role:item.title,email:item.email,image:item.image_url })),
-    gallery:(galleryResult.data||[]).map((item)=>({ id:item.id,title:item.title,image:item.image_url,description:item.caption,sourceUrl:item.source_url,mediaType:(item.media_type||"image") as "image"|"video" })),
+    gallery:(galleryResult.data||[]).map((item)=>({ id:item.id,title:item.title,image:item.image_url,description:item.caption,sourceUrl:item.source_url,mediaType:(item.media_type||"image") as "image"|"video",createdAt:item.created_at })),
     settings:{ clubName:settings.club_name,shortName:settings.short_name,email:settings.email,instagram:settings.instagram,linkedin:settings.linkedin },
   };
 }
