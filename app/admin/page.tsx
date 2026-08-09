@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
-import { createClient } from "../lib/supabase/server";
+import { createSupabaseServerClient } from "../lib/supabase/server";
 import AdminDashboard from "./AdminDashboard";
 
 const allowedRoles = new Set(["super_admin", "admin", "events_manager", "media_manager", "team_manager"]);
 
 export default async function AdminPage() {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
