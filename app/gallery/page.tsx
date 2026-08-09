@@ -1,10 +1,12 @@
 import { Footer, Header, PageHero } from "../components/SiteChrome";
 import { archiveEvents, galleryImages } from "../lib/clubMedia";
-import { siteContent as site } from "../lib/siteContent";
+import { getLiveSiteContent } from "../lib/liveSiteContent";
 
+export const dynamic = "force-dynamic";
 const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"});
 
-export default function GalleryPage(){
+export default async function GalleryPage(){
+  const site=await getLiveSiteContent();
   return <main><Header/><PageHero eyebrow="Gallery" title="Memories that connect us." subtitle="A sourced archive of the people, events and experiences that make ¡Viva Perú! what it is."/>
     {site.gallery.length>0 && <section className="page-section"><div className="wrap gallery-intro"><div><span className="kicker">Club gallery</span><h2>Published by the board.</h2></div><p>Current photos and captions managed directly through the ¡Viva Perú! board CMS.</p></div><div className="wrap sourced-gallery">{site.gallery.map((item)=><article key={item.id} className="sourced-card"><div className="sourced-photo" style={photo(item.image)} role="img" aria-label={item.title}/><div className="sourced-copy"><span className="kicker">Club media</span><h2>{item.title}</h2><p>{item.description}</p>{item.sourceUrl&&<a href={item.sourceUrl} target="_blank" rel="noreferrer" className="source-link">Original source ↗</a>}</div></article>)}</div></section>}
 
