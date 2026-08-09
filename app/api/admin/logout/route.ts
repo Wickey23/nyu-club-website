@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { clearAdminCookie } from "../../../lib/adminAuth";
+import { createSupabaseServerClient } from "../../../lib/supabase/server";
 
 export async function POST() {
-  await clearAdminCookie();
-  return NextResponse.json({ ok: true });
+  const supabase = await createSupabaseServerClient();
+  await supabase.auth.signOut();
+  return NextResponse.json({ ok:true });
 }
