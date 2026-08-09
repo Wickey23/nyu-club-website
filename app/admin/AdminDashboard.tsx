@@ -7,7 +7,7 @@ type EventItem = { id:string; title:string; date:string; time:string; location:s
 type TeamItem = { id:string; name:string; role:string; email:string; image:string };
 type GalleryItem = { id:string; title:string; image:string; description:string; sourceUrl?:string };
 type SiteContent = {
-  homepage:{ headline:string; description:string; heroImage:string; featuredEventId:string };
+  homepage:{ headline:string; description:string; heroImage:string; featuredEventId:string; videoUrl:string; videoPosterUrl:string; secondaryVideoUrl:string; secondaryVideoPosterUrl:string };
   events:EventItem[];
   team:TeamItem[];
   gallery:GalleryItem[];
@@ -15,7 +15,7 @@ type SiteContent = {
 };
 
 const emptyContent: SiteContent = {
-  homepage:{ headline:"", description:"", heroImage:"", featuredEventId:"" },
+  homepage:{ headline:"", description:"", heroImage:"", featuredEventId:"", videoUrl:"", videoPosterUrl:"", secondaryVideoUrl:"", secondaryVideoPosterUrl:"" },
   events:[],
   team:[],
   gallery:[],
@@ -57,7 +57,10 @@ export default function AdminDashboard({ adminEmail, adminRole }: { adminEmail:s
     const response=await fetch("/api/admin/content",{cache:"no-store"});
     const data=await response.json();
     if(response.ok) {
-      setContent(data.content);
+      setContent({
+        ...data.content,
+        homepage:{...emptyContent.homepage,...data.content.homepage},
+      });
       setLoadFailed(false);
     } else {
       setMessage(data.error||"Unable to load CMS content.");
@@ -124,13 +127,41 @@ export default function AdminDashboard({ adminEmail, adminRole }: { adminEmail:s
         <div className="cms-panel"><span className="admin-kicker">Publishing</span><h2>How updates work</h2><p>Content is stored directly in Supabase. When you save, published events, team information, gallery items and site settings are available to the public site immediately. Uploaded photos are stored in the club&apos;s Supabase Storage bucket.</p></div>
       </>}
 
-      {tab==="Homepage" && canManageAll && <div className="cms-panel form-stack"><label>Homepage headline<textarea value={content.homepage.headline} onChange={e=>setContent({...content,homepage:{...content.homepage,headline:e.target.value}})}/></label><label>Intro description<textarea value={content.homepage.description} onChange={e=>setContent({...content,homepage:{...content.homepage,description:e.target.value}})}/></label><label>Hero image URL<input value={content.homepage.heroImage} onChange={e=>setContent({...content,homepage:{...content.homepage,heroImage:e.target.value}})}/></label><label className="upload-field">Upload new hero image<input type="file" accept="image/*" onChange={e=>upload(e,url=>setContent({...content,homepage:{...content.homepage,heroImage:url}}))}/></label><label>Featured event<select value={content.homepage.featuredEventId} onChange={e=>setContent({...content,homepage:{...content.homepage,featuredEventId:e.target.value}})}><option value="">No featured event</option>{content.events.map(e=><option value={e.id} key={e.id}>{e.title}</option>)}</select></label>{content.homepage.heroImage && <img className="cms-preview" src={content.homepage.heroImage} alt="Homepage hero preview"/>}</div>}
+      {tab==="Homepage" && canManageAll && <div className="editor-list">
+        <section className="cms-panel form-stack">
+          <span className="admin-kicker">Hero</span><h2>Homepage intro</h2>
+          <label>Homepage headline<textarea value={content.homepage.headline} onChange={e=>setContent({...content,homepage:{...content.homepage,headline:e.target.value}})}/></label>
+          <label>Intro description<textarea value={content.homepage.description} onChange={e=>setContent({...content,homepage:{...content.homepage,description:e.target.value}})}/></label>
+          <label>Hero image URL<input value={content.homepage.heroImage} onChange={e=>setContent({...content,homepage:{...content.homepage,heroImage:e.target.value}})}/></label>
+          <label className="upload-field">Upload new hero image<input type="file" accept="image/*" onChange={e=>upload(e,url=>setContent({...content,homepage:{...content.homepage,heroImage:url}}))}/></label>
+          <label>Featured event<select value={content.homepage.featuredEventId} onChange={e=>setContent({...content,homepage:{...content.homepage,featuredEventId:e.target.value}})}><option value="">No featured event</option>{content.events.map(e=><option value={e.id} key={e.id}>{e.title}</option>)}</select></label>
+          {content.homepage.heroImage && <img className="cms-preview" src={content.homepage.heroImage} alt="Homepage hero preview"/>}
+        </section>
+
+        <section className="cms-panel form-stack">
+          <span className="admin-kicker">Video media</span><h2>Homepage video slots</h2>
+          <p>Paste direct MP4/WebM video URLs for now. Poster images can be uploaded here and the public homepage will display them behind the play treatment until a video URL is added.</p>
+          <div className="field-grid">
+            <label>Main reel video URL<input value={content.homepage.videoUrl} onChange={e=>setContent({...content,homepage:{...content.homepage,videoUrl:e.target.value}})} placeholder="https://.../club-reel.mp4"/></label>
+            <label>Main reel poster URL<input value={content.homepage.videoPosterUrl} onChange={e=>setContent({...content,homepage:{...content.homepage,videoPosterUrl:e.target.value}})}/></label>
+          </div>
+          <label className="upload-field">Upload main reel poster<input type="file" accept="image/*" onChange={e=>upload(e,url=>setContent({...content,homepage:{...content.homepage,videoPosterUrl:url}}))}/></label>
+          {content.homepage.videoPosterUrl&&<img className="cms-preview small" src={content.homepage.videoPosterUrl} alt="Main reel poster preview"/>}
+          <div className="field-grid">
+            <label>Secondary video URL<input value={content.homepage.secondaryVideoUrl} onChange={e=>setContent({...content,homepage:{...content.homepage,secondaryVideoUrl:e.target.value}})} placeholder="https://.../story.mp4"/></label>
+            <label>Secondary poster URL<input value={content.homepage.secondaryVideoPosterUrl} onChange={e=>setContent({...content,homepage:{...content.homepage,secondaryVideoPosterUrl:e.target.value}})}/></label>
+          </div>
+          <label className="upload-field">Upload secondary video poster<input type="file" accept="image/*" onChange={e=>upload(e,url=>setContent({...content,homepage:{...content.homepage,secondaryVideoPosterUrl:url}}))}/></label>
+          {content.homepage.secondaryVideoPosterUrl&&<img className="cms-preview small" src={content.homepage.secondaryVideoPosterUrl} alt="Secondary video poster preview"/>}
+          <div className="cms-notice">The homepage photo carousel automatically uses published Gallery items in their current order.</div>
+        </section>
+      </div>}
 
       {tab==="Events" && canManageEvents && <div className="editor-list"><button className="admin-primary add-button" onClick={()=>setContent({...content,events:[blankEvent(),...content.events]})}>＋ Add event</button>{content.events.map((item,index)=><article className="cms-panel editor-card" key={item.id}><div className="editor-card-head"><div><span className="status-pill">{item.status}</span><h2>{item.title||"Untitled event"}</h2></div><button className="danger" onClick={()=>setContent({...content,events:content.events.filter((_,i)=>i!==index)})}>Delete</button></div><div className="field-grid"><label>Title<input value={item.title} onChange={e=>patchEvent(index,{title:e.target.value})}/></label><label>Status<select value={item.status} onChange={e=>patchEvent(index,{status:e.target.value})}><option value="draft">Draft</option><option value="published">Published</option><option value="past">Past</option></select></label><label>Date<input type="date" value={item.date} onChange={e=>patchEvent(index,{date:e.target.value})}/></label><label>Time<input type="time" value={item.time} onChange={e=>patchEvent(index,{time:e.target.value})}/></label><label>Location<input value={item.location} onChange={e=>patchEvent(index,{location:e.target.value})}/></label><label>RSVP URL<input value={item.rsvpUrl} onChange={e=>patchEvent(index,{rsvpUrl:e.target.value})}/></label></div><label>Description<textarea value={item.description} onChange={e=>patchEvent(index,{description:e.target.value})}/></label><label>Image URL<input value={item.image} onChange={e=>patchEvent(index,{image:e.target.value})}/></label><label className="upload-field">Upload event image<input type="file" accept="image/*" onChange={e=>upload(e,url=>patchEvent(index,{image:url}))}/></label>{item.image&&<img className="cms-preview small" src={item.image} alt=""/>}</article>)}</div>}
 
       {tab==="Team" && canManageTeam && <div className="editor-list"><button className="admin-primary add-button" onClick={()=>setContent({...content,team:[...content.team,blankMember()]})}>＋ Add board member</button>{content.team.map((item,index)=><article className="cms-panel team-editor" key={item.id}>{item.image?<img src={item.image} alt=""/>:<div className="member-placeholder">Photo</div>}<div className="form-stack"><div className="field-grid"><label>Name<input value={item.name} onChange={e=>patchTeam(index,{name:e.target.value})}/></label><label>Role<input value={item.role} onChange={e=>patchTeam(index,{role:e.target.value})}/></label><label>Email<input type="email" value={item.email} onChange={e=>patchTeam(index,{email:e.target.value})}/></label><label>Image URL<input value={item.image} onChange={e=>patchTeam(index,{image:e.target.value})}/></label></div><label className="upload-field">Upload portrait<input type="file" accept="image/*" onChange={e=>upload(e,url=>patchTeam(index,{image:url}))}/></label><button className="danger inline" onClick={()=>setContent({...content,team:content.team.filter((_,i)=>i!==index)})}>Remove member</button></div></article>)}</div>}
 
-      {tab==="Gallery" && canManageGallery && <div className="cms-panel"><div className="cms-panel-head"><div><span className="admin-kicker">Media library</span><h2>Gallery photos</h2></div><label className="admin-primary file-button">＋ Upload photo<input type="file" accept="image/*" onChange={e=>upload(e,url=>setContent({...content,gallery:[{id:`photo-${Date.now()}`,title:"New photo",image:url,description:"",sourceUrl:""},...content.gallery]}))}/></label></div><div className="gallery-editor-grid">{content.gallery.map((item,index)=><article key={item.id}><img src={item.image} alt=""/><input value={item.title} onChange={e=>patchGallery(index,{title:e.target.value})}/><textarea placeholder="Caption / description" value={item.description} onChange={e=>patchGallery(index,{description:e.target.value})}/><input placeholder="Instagram or source URL" value={item.sourceUrl||""} onChange={e=>patchGallery(index,{sourceUrl:e.target.value})}/><button className="danger inline" onClick={()=>setContent({...content,gallery:content.gallery.filter((_,i)=>i!==index)})}>Remove</button></article>)}</div>{!content.gallery.length&&<p className="empty-state">No gallery photos yet. Upload the first one.</p>}</div>}
+      {tab==="Gallery" && canManageGallery && <div className="cms-panel"><div className="cms-panel-head"><div><span className="admin-kicker">Media library</span><h2>Gallery photos</h2></div><label className="admin-primary file-button">＋ Upload photo<input type="file" accept="image/*" onChange={e=>upload(e,url=>setContent({...content,gallery:[{id:`photo-${Date.now()}`,title:"New photo",image:url,description:"",sourceUrl:""},...content.gallery]}))}/></label></div><p>The homepage carousel uses these published photos from top to bottom, one image at a time.</p><div className="gallery-editor-grid">{content.gallery.map((item,index)=><article key={item.id}><img src={item.image} alt=""/><input value={item.title} onChange={e=>patchGallery(index,{title:e.target.value})}/><textarea placeholder="Caption / description" value={item.description} onChange={e=>patchGallery(index,{description:e.target.value})}/><input placeholder="Instagram or source URL" value={item.sourceUrl||""} onChange={e=>patchGallery(index,{sourceUrl:e.target.value})}/><button className="danger inline" onClick={()=>setContent({...content,gallery:content.gallery.filter((_,i)=>i!==index)})}>Remove</button></article>)}</div>{!content.gallery.length&&<p className="empty-state">No gallery photos yet. Upload the first one.</p>}</div>}
 
       {tab==="Settings" && canManageAll && <div className="cms-panel form-stack"><label>Official club name<input value={content.settings.clubName} onChange={e=>setContent({...content,settings:{...content.settings,clubName:e.target.value}})}/></label><label>Public short name<input value={content.settings.shortName} onChange={e=>setContent({...content,settings:{...content.settings,shortName:e.target.value}})}/></label><label>Club email<input type="email" value={content.settings.email} onChange={e=>setContent({...content,settings:{...content.settings,email:e.target.value}})}/></label><label>Instagram URL<input value={content.settings.instagram} onChange={e=>setContent({...content,settings:{...content.settings,instagram:e.target.value}})}/></label><label>LinkedIn URL<input value={content.settings.linkedin} onChange={e=>setContent({...content,settings:{...content.settings,linkedin:e.target.value}})}/></label><div className="logo-setting"><img src="/nyu-peruvian-logo.webp" alt="NYU Peruvian Student Association logo"/><div><b>Official logo</b><p>The club logo is used across the public site and board portal.</p></div></div></div>}
     </section>
