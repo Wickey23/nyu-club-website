@@ -8,8 +8,10 @@ export default function AdminActivatePage() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [recoveryEmail, setRecoveryEmail] = useState("");
   const [message, setMessage] = useState("Checking your invitation…");
   const [ready, setReady] = useState(false);
+  const [needsRecovery, setNeedsRecovery] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,13 +29,10 @@ export default function AdminActivatePage() {
         const accessToken = hash.get("access_token");
         const refreshToken = hash.get("refresh_token");
 
-        // PKCE flow used by Supabase SSR/Auth.
         if (code) {
           const { error } = await supabase.auth.exchangeCodeForSession(code);
           if (error) throw error;
-        }
-        // Email OTP/token-hash flow.
-        else if (
+        } else if (
           tokenHash &&
           (queryType === "invite" || queryType === "recovery" || queryType === "magiclink" || queryType === "email" || queryType === "signup")
         ) {
@@ -42,9 +41,7 @@ export default function AdminActivatePage() {
             type: queryType as "invite" | "recovery" | "magiclink" | "email" | "signup",
           });
           if (error) throw error;
-        }
-        // Legacy/implicit flow: credentials are delivered in the URL fragment.
-        else if (accessToken && refreshToken && (hashType === "invite" || hashType === "recovery" || !hashType)) {
+        } else if (accessToken && refreshToken && (hashType === "invite" || hashType === "recovery" || !hashType)) {
           const { error } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
@@ -56,19 +53,35 @@ export default function AdminActivatePage() {
         if (error) throw error;
 
         if (data.session) {
-          // Strip invite credentials from the visible URL once consumed.
           window.history.replaceState({}, document.title, "/admin/activate");
           setReady(true);
+          setNeedsRecovery(false);
           setMessage("Create a password for your board account.");
         } else {
-          setMessage("This invitation did not create a secure session. Open the newest invitation email and try again.");
+          setNeedsRecovery(true);
+          setMessage("Your invitation was accepted, but this browser did not retain the secure session. Send yourself a password setup link below.");
         }
       } catch (error) {
         console.error("Activation error", error);
-        setMessage("This activation link is invalid or has expired. Request a new invitation.");
+        setNeedsRecovery(true);
+        setMessage("This invitation session could not be completed in this browser. Send yourself a secure password setup link below.");
       }
     })();
   }, []);
+
+  async function sendRecovery(event: FormEvent) {
+    event.preventDefault();
+    if (!recoveryEmail.trim()) return;
+    setLoading(true);
+    setMessage("");
+    const supabase = createSupabaseBrowserClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(recoveryEmail.trim(), {
+      redirectTo: `${window.location.origin}/admin/activate`,
+    });
+    setLoading(false);
+    if (error) return setMessage(error.message);
+    setMessage("Password setup email sent. Open the newest email on this same device and browser.");
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -80,7 +93,8 @@ export default function AdminActivatePage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       setLoading(false);
-      return setMessage("Your invitation session has expired. Ask the Super Admin to resend the invitation.");
+      setNeedsRecovery(true);
+      return setMessage("Your secure session has expired. Send yourself a new password setup link below.");
     }
 
     const { error } = await supabase.auth.updateUser({ password });
@@ -106,11 +120,18 @@ export default function AdminActivatePage() {
       <span className="admin-kicker">Board invitation</span>
       <h1>Activate your account</h1>
       <p>{message}</p>
+
       {ready && <form onSubmit={submit} className="admin-login-form">
         <label>New password<input type="password" autoComplete="new-password" value={password} onChange={(e)=>setPassword(e.target.value)} required minLength={8}/></label>
         <label>Confirm password<input type="password" autoComplete="new-password" value={confirm} onChange={(e)=>setConfirm(e.target.value)} required minLength={8}/></label>
         <button className="admin-primary" disabled={loading}>{loading ? "Activating…" : "Activate account"}</button>
       </form>}
+
+      {!ready && needsRecovery && <form onSubmit={sendRecovery} className="admin-login-form">
+        <label>Approved board email<input type="email" autoComplete="email" value={recoveryEmail} onChange={(e)=>setRecoveryEmail(e.target.value)} placeholder="name@nyu.edu" required /></label>
+        <button className="admin-primary" disabled={loading}>{loading ? "Sending…" : "Send password setup link"}</button>
+      </form>}
+
       <a href="/admin/login" className="admin-back">← Back to sign in</a>
     </section>
   </main>;
