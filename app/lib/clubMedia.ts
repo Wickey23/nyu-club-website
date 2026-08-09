@@ -5,6 +5,11 @@ export const clubMedia = {
     "https://media.licdn.com/dms/image/v2/D4E22AQHE8N0OFC2Syg/feedshare-shrink_800/B4EZoydz2OLMAg-/0/1761783271859?e=2147483647&t=r7NDv5MYzdNDYNYqpSHvfWL7S7hSFwriurQBWTZ0tLg&v=beta",
     "https://media.licdn.com/dms/image/v2/D4E22AQHB8I6VfgaXBQ/feedshare-shrink_800/B4EZoydz1.KoAg-/0/1761783271572?e=2147483647&t=pRzLluBGTYyIvFwcYLx7jMW2hY1ybqjlBNMFviRUiEo&v=beta"
   ],
+  metVisit: [
+    "https://cdn.www.gob.pe/uploads/document/file/7824910/1132670-universitarios-peruanos-visitaron-el-museo-metropolitano-de-arte-de-nueva-york.png",
+    "https://cdn.www.gob.pe/uploads/document/file/7824911/1132670-universitarios-peruanos-visitaron-el-museo-metropolitano-de-arte-de-nueva-york-2.png",
+    "https://cdn.www.gob.pe/uploads/document/file/7824913/1132670-universitarios-peruanos-visitaron-el-museo-metropolitano-de-arte-de-nueva-york-3.png"
+  ],
   engageAtlas: "/engage/engage-atlas.webp",
   engage: {
     jointBoards: { backgroundImage: "url(/engage/engage-atlas.webp)", backgroundSize: "200% 200%", backgroundPosition: "0% 0%" },
@@ -22,6 +27,30 @@ export const galleryImages = [
     description: "Eva Ayllón × Daniela Darcourt at the NYU Peruvian Student Association's 2025 Conversación Musical.",
     source: "NYU Peruvian Student Association · LinkedIn",
     sourceUrl: "https://www.linkedin.com/company/nyuperu"
+  },
+  {
+    id: "met-visit-01",
+    title: "¡Viva Perú! at The Met",
+    image: clubMedia.metVisit[0],
+    description: "Peruvian university students from NYU, CUNY Hunter College and Columbia University during the March 2025 guided visit to The Metropolitan Museum of Art.",
+    source: "Ministerio de Relaciones Exteriores del Perú",
+    sourceUrl: "https://www.gob.pe/institucion/rree/noticias/1132670-universitarios-peruanos-visitaron-el-museo-metropolitano-de-arte-de-nueva-york"
+  },
+  {
+    id: "met-visit-02",
+    title: "Pre-Columbian Art at The Met",
+    image: clubMedia.metVisit[1],
+    description: "A cultural visit organized with the Consulate General of Peru in New York and Peruvian student associations from NYU, CUNY Hunter and Columbia.",
+    source: "Ministerio de Relaciones Exteriores del Perú",
+    sourceUrl: "https://www.gob.pe/institucion/rree/noticias/1132670-universitarios-peruanos-visitaron-el-museo-metropolitano-de-arte-de-nueva-york"
+  },
+  {
+    id: "met-visit-03",
+    title: "Peruvian Students Across New York",
+    image: clubMedia.metVisit[2],
+    description: "Students connect through Peruvian culture during the 2025 museum collaboration in New York City.",
+    source: "Ministerio de Relaciones Exteriores del Perú",
+    sourceUrl: "https://www.gob.pe/institucion/rree/noticias/1132670-universitarios-peruanos-visitaron-el-museo-metropolitano-de-arte-de-nueva-york"
   },
   {
     id: "engage-joint-boards",
@@ -63,7 +92,7 @@ export const galleryImages = [
 
 export const archiveEvents = [
   { title: "La Gran Chocolatada", date: "Dec. 11, 2025", source: "NYU Engage" },
-  { title: "¡Viva Perú! at The Met", date: "Mar. 14, 2025", source: "Club social archive" },
+  { title: "¡Viva Perú! at The Met", date: "Mar. 14, 2025", source: "Ministry of Foreign Affairs of Peru" },
   { title: "Andean Discovery", date: "Mar. 4, 2025", source: "Club social archive" },
   { title: "Peru vs. Brazil Watch Party", date: "Oct. 15, 2024", source: "Club social archive" },
   { title: "Conversation with Eva Ayllón", date: "Oct. 20, 2023", source: "NYU Engage" }
