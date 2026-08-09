@@ -1,16 +1,21 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(searchParams.get("error") === "not-authorized" ? "This account does not have board access." : "");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    const code=new URL(window.location.href).searchParams.get("error");
+    if(code==="not-authorized") setError("This account does not have board access.");
+    if(code==="auth-callback") setError("The sign-in link could not be verified. Try again or request a new invitation.");
+  },[]);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
