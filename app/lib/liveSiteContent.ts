@@ -9,7 +9,7 @@ export async function getLiveSiteContent(): Promise<SiteContent> {
       supabase.from("homepage_content").select("headline,description,hero_image,featured_event_id,video_url,video_poster_url,secondary_video_url,secondary_video_poster_url").eq("id",1).single(),
       supabase.from("events").select("id,title,event_date,start_time,location,description,image_url,rsvp_url,status").in("status",["published","past"]).order("event_date",{ascending:false,nullsFirst:false}),
       supabase.from("team_members").select("id,name,title,email,image_url,sort_order").eq("active",true).order("sort_order",{ascending:true}),
-      supabase.from("gallery_items").select("id,title,image_url,caption,source_url,sort_order").eq("published",true).order("sort_order",{ascending:true}),
+      supabase.from("gallery_items").select("id,title,image_url,caption,source_url,media_type,sort_order").eq("published",true).order("sort_order",{ascending:true}),
       supabase.from("site_settings").select("club_name,short_name,email,instagram,linkedin").eq("id",1).single(),
     ]);
 
@@ -30,7 +30,7 @@ export async function getLiveSiteContent(): Promise<SiteContent> {
       },
       events:(eventResult.data||[]).map(item=>({ id:item.id,title:item.title,date:item.event_date||"",time:item.start_time?String(item.start_time).slice(0,5):"",location:item.location,description:item.description,image:item.image_url,rsvpUrl:item.rsvp_url,status:item.status })),
       team:(teamResult.data||[]).map(item=>({ id:item.id,name:item.name,role:item.title,email:item.email,image:item.image_url })),
-      gallery:(galleryResult.data||[]).map(item=>({ id:item.id,title:item.title,image:item.image_url,description:item.caption,sourceUrl:item.source_url })),
+      gallery:(galleryResult.data||[]).map(item=>({ id:item.id,title:item.title,image:item.image_url,description:item.caption,sourceUrl:item.source_url,mediaType:(item.media_type||"image") as "image"|"video" })),
       settings:{ clubName:settings.club_name,shortName:settings.short_name,email:settings.email,instagram:settings.instagram,linkedin:settings.linkedin },
     };
   } catch {
