@@ -40,7 +40,11 @@ export default function AdminActivatePage() {
       setLoading(false);
       return setMessage(error.message);
     }
-    await supabase.from("profiles").update({ status: "active" }).eq("id", user.id);
+    const { error: activateError } = await supabase.rpc("activate_own_board_profile");
+    if (activateError) {
+      setLoading(false);
+      return setMessage(activateError.message);
+    }
     setLoading(false);
     router.push("/admin");
     router.refresh();
