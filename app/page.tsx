@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Footer, Header } from "./components/SiteChrome";
+import NewsletterSignup from "./components/NewsletterSignup";
 import { clubMedia } from "./lib/clubMedia";
 import { siteContent as site } from "./lib/siteContent";
 
@@ -24,6 +25,8 @@ export default function HomePage(){
     {featured && <section className="cream-section pt0"><div className="wrap"><div className="section-title"><span className="kicker">Featured event</span><h2>Come experience it.</h2></div><article className="feature-event"><div className="event-image" style={photo(featured.image || clubMedia.conversation[0])}/><div className="event-copy"><span className="kicker light">{featured.status === "published" ? "Upcoming" : "Featured"}</span><h3>{featured.title}</h3><p>{featured.description}</p><ul>{featured.date&&<li>{featured.date}</li>}{featured.time&&<li>{featured.time}</li>}<li>{featured.location}</li></ul><Link href="/events" className="btn red">View events</Link></div></article><Link className="text-link" href="/events">View all events →</Link></div></section>}
 
     <section className="cream-section" id="community"><div className="wrap"><div className="section-title"><span className="kicker">What we do</span><h2>Experiences that celebrate Peru.</h2></div><div className="experience-grid">{experiences.map(([title,sub,desc],i)=><article key={title}><div className="experience-img" style={photo(clubMedia.conversation[i%clubMedia.conversation.length])}/><span className="kicker">{sub}</span><h3>{title}</h3><p>{desc}</p></article>)}</div></div></section>
+
+    <NewsletterSignup />
 
     <section className="join-banner"><div className="wrap join-grid"><div><span className="kicker light">Join the community</span><h2>Peru is the connection.<br/>Community is the reason.</h2><p>Peruvian? Peruvian-American? Interested in the culture? Just looking for community? You’re welcome here.</p><div className="actions"><Link className="btn white" href="/join">Join ¡Viva Perú!</Link><a className="btn outline-light" href={site.settings.instagram}>Follow us</a></div></div><div className="nyc-photo" style={photo(clubMedia.conversation[3])}><span>Peru × New York City</span></div></div></section>
     <Footer/>
