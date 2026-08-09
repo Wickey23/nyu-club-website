@@ -5,7 +5,7 @@ export type EventItem = {
   description: string; image: string; rsvpUrl: string; status: string;
 };
 export type TeamItem = { id: string; name: string; role: string; email: string; image: string };
-export type GalleryItem = { id: string; title: string; image: string; description: string; sourceUrl?: string };
+export type GalleryItem = { id: string; title: string; image: string; description: string; sourceUrl?: string; mediaType?: "image"|"video" };
 export type SiteContent = {
   homepage: {
     headline: string;
