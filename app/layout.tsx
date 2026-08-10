@@ -20,7 +20,7 @@ const display = Playfair_Display({
 });
 
 const fallbackClubName = "NYU Peruvian Student Association";
-const fallbackShortName = "¡Viva Perú!";
+const fallbackShortName = "NYU Perú";
 
 export async function generateMetadata(): Promise<Metadata> {
   let clubName = fallbackClubName;
@@ -40,19 +40,34 @@ export async function generateMetadata(): Promise<Metadata> {
     // Keep stable fallback metadata if settings cannot be loaded.
   }
 
+  const title = `${shortName} | NYU Peru | ${clubName}`;
+  const description = `${clubName} — NYU's Peruvian student community for Peruvian culture, events, community, and connection in New York City.`;
+
   return {
-    title: `${shortName} | ${clubName}`,
-    description: `${clubName} — celebrating Peruvian culture, community, and connection at NYU and across New York City.`,
+    title,
+    applicationName: shortName,
+    description,
+    keywords: [
+      "NYU Peru",
+      "NYU Perú",
+      "NYU Peruvian Student Association",
+      "Peruvian students NYU",
+      "Peruvian club NYU",
+      "Peru NYU",
+      "NYU cultural clubs",
+      shortName,
+      clubName,
+    ],
     openGraph: {
-      title: `${shortName} | ${clubName}`,
-      description: `${clubName} — celebrating Peruvian culture, community, and connection at NYU and across New York City.`,
+      title,
+      description,
       siteName: shortName,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${shortName} | ${clubName}`,
-      description: `${clubName} — celebrating Peruvian culture, community, and connection at NYU and across New York City.`,
+      title,
+      description,
     },
   };
 }
