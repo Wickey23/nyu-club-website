@@ -66,22 +66,23 @@ export default function AdminDashboard({adminEmail,adminRole}:{adminEmail:string
   function chooseTab(next:Tab){setTab(next);setMenuOpen(false);}
 
   if(loading)return <main className="admin-loading">Loading board portal…</main>;
+  const brand=content.settings.shortName || content.settings.clubName || "NYU Perú";
 
   return <main className="cms-shell">
     <aside className={`cms-sidebar ${menuOpen?"open":""}`}>
-      <div className="cms-brand"><img src="/nyu-peruvian-logo-v4.svg" alt=""/><div><b>¡Viva Perú!</b><span>Board CMS</span></div><button className="cms-menu-close" onClick={()=>setMenuOpen(false)}>×</button></div>
+      <div className="cms-brand"><img src="/nyu-peruvian-logo-v4.svg" alt=""/><div><b>{brand}</b><span>Board CMS</span></div><button className="cms-menu-close" onClick={()=>setMenuOpen(false)}>×</button></div>
       <nav>{tabs.map(item=><button key={item} onClick={()=>chooseTab(item)} className={tab===item?"active":""}>{item}</button>)}{canManageAll&&<a className="cms-tool-link" href="/admin/newsletter">Newsletter <span>↗</span></a>}{canManageAll&&<a className="cms-tool-link" href="/admin/users">Users & Access <span>↗</span></a>}</nav>
       <div className="cms-user"><span>{roleLabel(adminRole)}</span><b>{adminEmail}</b><button onClick={logout}>Sign out</button></div>
     </aside>
     {menuOpen&&<button className="cms-backdrop" onClick={()=>setMenuOpen(false)} aria-label="Close menu"/>}
 
     <section className="cms-main">
-      <div className="cms-mobilebar"><button onClick={()=>setMenuOpen(true)}>☰</button><div><b>¡Viva Perú!</b><span>{roleLabel(adminRole)}</span></div><button onClick={save} disabled={saving}>{saving?"…":"Save"}</button></div>
+      <div className="cms-mobilebar"><button onClick={()=>setMenuOpen(true)}>☰</button><div><b>{brand}</b><span>{roleLabel(adminRole)}</span></div><button onClick={save} disabled={saving}>{saving?"…":"Save"}</button></div>
       <header className="cms-top"><div><span className="admin-kicker">{roleLabel(adminRole)}</span><h1>{tab}</h1></div><div className="cms-actions"><a href="/" target="_blank" rel="noreferrer">View site ↗</a><button onClick={save} disabled={saving} className="admin-primary">{saving?"Saving…":"Save changes"}</button></div></header>
       {message&&<div className="cms-notice">{message}</div>}
 
       {tab==="Dashboard"&&<>
-        <div className="dashboard-welcome"><div><span className="admin-kicker">Club control center</span><h2>Keep ¡Viva Perú! current.</h2><p>Publish events, update the board, manage media, send newsletters and control access from one place.</p></div><a href="/" target="_blank" rel="noreferrer">Open live site ↗</a></div>
+        <div className="dashboard-welcome"><div><span className="admin-kicker">Club control center</span><h2>Keep {brand} current.</h2><p>Publish events, update the board, manage media, send newsletters and control access from one place.</p></div><a href="/" target="_blank" rel="noreferrer">Open live site ↗</a></div>
         <div className="cms-stats"><article><b>{stats.events}</b><span>Total events</span></article><article><b>{stats.published}</b><span>Published</span></article><article><b>{stats.team}</b><span>Board members</span></article><article><b>{stats.photos}</b><span>Photos</span></article><article><b>{stats.videos}</b><span>Videos</span></article></div>
         <section className="cms-panel"><span className="admin-kicker">Quick actions</span><h2>What do you want to update?</h2><div className="quick-grid">{canManageEvents&&<button onClick={()=>{setContent({...content,events:[blankEvent(),...content.events]});setTab("Events")}}>＋ Add event<span>Create a new event</span></button>}{canManageTeam&&<button onClick={()=>{setContent({...content,team:[...content.team,blankMember()]});setTab("Team")}}>＋ Add board member<span>Update the public team</span></button>}{canManageGallery&&<button onClick={()=>{setContent({...content,gallery:[blankMedia("image"),...content.gallery]});setTab("Gallery")}}>＋ Add media<span>Photo, video or Drive link</span></button>}{canManageAll&&<button onClick={()=>setTab("Homepage")}>Edit homepage<span>Hero, videos and featured event</span></button>}{canManageAll&&<a className="quick-link" href="/admin/newsletter">Create newsletter ↗<span>Email the community</span></a>}{canManageAll&&<a className="quick-link" href="/admin/users">Manage access ↗<span>Roles and invitations</span></a>}</div></section>
       </>}
