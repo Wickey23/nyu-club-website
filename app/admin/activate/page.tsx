@@ -34,14 +34,14 @@ export default function AdminActivatePage() {
           if (error) throw error;
         } else if (
           tokenHash &&
-          (queryType === "invite" || queryType === "recovery" || queryType === "magiclink" || queryType === "email" || queryType === "signup")
+          (queryType === "invite" || queryType === "magiclink" || queryType === "email" || queryType === "signup")
         ) {
           const { error } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
-            type: queryType as "invite" | "recovery" | "magiclink" | "email" | "signup",
+            type: queryType as "invite" | "magiclink" | "email" | "signup",
           });
           if (error) throw error;
-        } else if (accessToken && refreshToken && (hashType === "invite" || hashType === "recovery" || !hashType)) {
+        } else if (accessToken && refreshToken && (hashType === "invite" || !hashType)) {
           const { error } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
@@ -76,11 +76,11 @@ export default function AdminActivatePage() {
     setMessage("");
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.auth.resetPasswordForEmail(recoveryEmail.trim(), {
-      redirectTo: `${window.location.origin}/admin/activate`,
+      redirectTo: `${window.location.origin}/admin/reset-password`,
     });
     setLoading(false);
     if (error) return setMessage(error.message);
-    setMessage("Password setup email sent. Open the newest email on this same device and browser.");
+    setMessage("Password setup email sent. Open the newest email to choose your password.");
   }
 
   async function submit(event: FormEvent) {
