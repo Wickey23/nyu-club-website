@@ -33,17 +33,17 @@ export default function AdminLoginPage() {
     setLoading(true); setError("");
     const supabase = createSupabaseBrowserClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/admin/activate`,
+      redirectTo: `${window.location.origin}/admin/reset-password`,
     });
     setLoading(false);
-    setError(resetError ? resetError.message : "Password reset email sent. Check your inbox.");
+    setError(resetError ? resetError.message : "Password reset email sent. Open the newest email to choose a new password.");
   }
 
   return <main className="admin-login-page">
     <section className="admin-login-card">
-      <img src="/nyu-peruvian-logo.webp" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
+      <img src="/nyu-peruvian-logo-v4.svg" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
       <span className="admin-kicker">Board portal</span>
-      <h1>¡Viva Perú! Admin</h1>
+      <h1>Admin sign in</h1>
       <p>Sign in with the email address that was approved by a club administrator.</p>
       <form onSubmit={submit} className="admin-login-form">
         <label>Email address<input type="email" autoComplete="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="name@nyu.edu" required /></label>
