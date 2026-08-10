@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import { createSupabaseServerClient } from "./lib/supabase/server";
+import PublicNameSync from "./components/PublicNameSync";
 import "./globals.css";
 import "./gallery-extra.css";
 import "./home-media.css";
@@ -75,7 +76,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <PublicNameSync />
+      </body>
     </html>
   );
 }
