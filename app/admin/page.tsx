@@ -9,13 +9,8 @@ export default async function AdminPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("email,display_name,role,status")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile || profile.status === "disabled" || !allowedRoles.has(profile.role)) {
+  const { data: profile } = await supabase.from("profiles").select("email,display_name,role,status").eq("id", user.id).single();
+  if (!profile || profile.status !== "active" || !allowedRoles.has(profile.role)) {
     redirect("/admin/login?error=not-authorized");
   }
 
