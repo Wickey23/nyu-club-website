@@ -4,7 +4,7 @@ import { Footer, Header, PageHero } from "../components/SiteChrome";
 import { archiveEvents, clubMedia } from "../lib/clubMedia";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 
-export const metadata:Metadata={title:"About | NYU Peruvian Student Association",description:"Learn about the NYU Peruvian Student Association, its mission, community, history and cultural programming at NYU."};
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`About | ${brand}`,description:"Learn about the NYU Peruvian Student Association, its mission, community, history and cultural programming at NYU."};}
 const bg=(src:string,position="center")=>({backgroundImage:`linear-gradient(0deg,rgba(0,0,0,.24),rgba(0,0,0,.08)),url(${src})`,backgroundSize:"cover",backgroundPosition:position});
 
 export default async function AboutPage(){
