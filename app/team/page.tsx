@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Footer, Header, PageHero } from "../components/SiteChrome";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 
-export const metadata:Metadata={title:"Team | NYU Peruvian Student Association",description:"Meet the current and past student leaders of the NYU Peruvian Student Association."};
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Team | ${brand}`,description:"Meet the current and past student leaders of the NYU Peruvian Student Association."};}
 export const dynamic = "force-dynamic";
 const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center top",backgroundRepeat:"no-repeat"});
 
