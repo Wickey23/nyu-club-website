@@ -10,5 +10,6 @@ export default async function AdminPage(){
   const{data:profile}=await supabase.from("profiles").select("email,display_name,role,status").eq("id",user.id).single();
   if(!profile||profile.status!=="active"||!allowedRoles.has(profile.role))redirect("/admin/login?error=not-authorized");
   await supabase.rpc("touch_own_profile_seen");
-  return <AdminDashboard adminEmail={profile.email||user.email||""} adminRole={profile.role}/>;
+  const canInstagram=["super_admin","admin","media_manager"].includes(profile.role);
+  return <>{canInstagram&&<a className="admin-instagram-shortcut" href="/admin/instagram">Instagram ↗</a>}<AdminDashboard adminEmail={profile.email||user.email||""} adminRole={profile.role}/></>;
 }
