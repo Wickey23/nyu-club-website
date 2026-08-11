@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "../lib/supabase/server";
-import { instagramEmbedUrl, instagramKind } from "../lib/instagram";
+import { instagramKind, normalizeInstagramUrl } from "../lib/instagram";
 
 export default async function InstagramSection(){
   const supabase=await createSupabaseServerClient();
@@ -9,5 +9,5 @@ export default async function InstagramSection(){
   ]);
   if(!posts?.length)return null;
   const profile=settings?.instagram||"https://www.instagram.com/perunyu/";const brand=settings?.short_name||settings?.club_name||"NYU Perú";
-  return <section className="page-section instagram-site-section"><div className="wrap"><div className="section-title"><div><span className="kicker">From Instagram</span><h2>See what {brand} is sharing.</h2></div><a className="btn outline" href={profile} target="_blank" rel="noreferrer">Follow on Instagram ↗</a></div><div className="instagram-site-grid">{posts.map(p=>{const embed=instagramEmbedUrl(p.instagram_url);return <article key={p.id} className={p.featured?"featured":""}>{p.cover_image?<a href={p.instagram_url} target="_blank" rel="noreferrer"><img src={p.cover_image} alt={p.caption||`Instagram ${instagramKind(p.instagram_url)}`}/></a>:embed?<iframe src={embed} title={p.caption||`Instagram ${instagramKind(p.instagram_url)}`} loading="lazy" allowTransparency/>:null}<div><span className="kicker">{instagramKind(p.instagram_url)}</span>{p.caption&&<p>{p.caption}</p>}<a href={p.instagram_url} target="_blank" rel="noreferrer">View on Instagram ↗</a></div></article>})}</div></div></section>;
+  return <section className="page-section instagram-site-section"><div className="wrap"><div className="section-title"><div><span className="kicker">From Instagram</span><h2>See what {brand} is sharing.</h2></div><a className="btn outline" href={profile} target="_blank" rel="noreferrer">Follow on Instagram ↗</a></div><div className="instagram-site-grid">{posts.map(p=>{const url=normalizeInstagramUrl(p.instagram_url)||p.instagram_url;return <article key={p.id} className={p.featured?"featured":""}>{p.cover_image?<a href={url} target="_blank" rel="noreferrer"><img src={p.cover_image} alt={p.caption||`Instagram ${instagramKind(p.instagram_url)}`}/></a>:<a className="instagram-link-placeholder" href={url} target="_blank" rel="noreferrer"><span>Instagram</span><b>{instagramKind(p.instagram_url)}</b><small>View original post ↗</small></a>}<div><span className="kicker">{instagramKind(p.instagram_url)}</span>{p.caption&&<p>{p.caption}</p>}<a href={url} target="_blank" rel="noreferrer">View on Instagram ↗</a></div></article>})}</div></div></section>;
 }
