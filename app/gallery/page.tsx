@@ -4,7 +4,7 @@ import { archiveEvents, galleryImages } from "../lib/clubMedia";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 import GalleryBrowser from "./GalleryBrowser";
 
-export const metadata:Metadata={title:"Gallery | NYU Peruvian Student Association",description:"Browse photos, videos and sourced archive media from NYU Peruvian Student Association events and community programming."};
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Gallery | ${brand}`,description:"Browse photos, videos and sourced archive media from NYU Peruvian Student Association events and community programming."};}
 export const dynamic = "force-dynamic";
 const photo=(src:string,position="center")=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:position,backgroundRepeat:"no-repeat"});
 
