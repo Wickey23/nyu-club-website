@@ -4,7 +4,7 @@ import { Footer, Header, PageHero } from "../components/SiteChrome";
 import { clubMedia } from "../lib/clubMedia";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 
-export const metadata:Metadata={title:"Join | NYU Peruvian Student Association",description:"Join the NYU Peruvian Student Association community, attend events, follow the club and connect with the board."};
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Join | ${brand}`,description:"Join the NYU Peruvian Student Association community, attend events, follow the club and connect with the board."};}
 const photo=(src:string,position="center")=>({backgroundImage:`linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.04)),url(${src})`,backgroundSize:"cover",backgroundPosition:position,backgroundRepeat:"no-repeat"});
 const today=new Date().toISOString().slice(0,10);
 const engage="https://engage.nyu.edu/organization/viva-peru-all-university";
