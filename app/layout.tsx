@@ -8,6 +8,7 @@ import "./home-media.css";
 import "./home-responsive.css";
 import "./newsletter.css";
 import "./phase2.css";
+import "./page-polish.css";
 
 const sans=DM_Sans({subsets:["latin"],variable:"--font-sans",display:"swap"});
 const display=Playfair_Display({subsets:["latin"],variable:"--font-display",display:"swap"});
