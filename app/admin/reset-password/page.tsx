@@ -1,11 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 
 export default function AdminResetPasswordPage() {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [message, setMessage] = useState("Verifying your password reset link…");
@@ -64,9 +62,14 @@ export default function AdminResetPasswordPage() {
     const { error: activateError } = await supabase.rpc("activate_own_board_profile");
     if (activateError) { setLoading(false); return setMessage(activateError.message); }
 
-    setLoading(false);
-    setMessage("Account ready. Redirecting to your admin dashboard…");
-    window.setTimeout(() => { router.push("/admin"); router.refresh(); }, 500);
+    const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError || !refreshed.session) {
+      setLoading(false);
+      return setMessage("Your password was updated, but the sign-in session could not be refreshed. Please sign in with your new password.");
+    }
+
+    setMessage("Account ready. Opening your admin dashboard…");
+    window.location.replace("/admin");
   }
 
   return <main className="admin-login-page">
