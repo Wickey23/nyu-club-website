@@ -1,8 +1,9 @@
+import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./supabase/config";
 import { siteContent as fallback, type SiteContent } from "./siteContent";
 
-export async function getLiveSiteContent(): Promise<SiteContent> {
+async function loadLiveSiteContent(): Promise<SiteContent> {
   const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth:{ persistSession:false,autoRefreshToken:false } });
   try {
     const [homeResult,eventResult,teamResult,galleryResult,settingsResult] = await Promise.all([
@@ -49,3 +50,5 @@ export async function getLiveSiteContent(): Promise<SiteContent> {
     };
   }
 }
+
+export const getLiveSiteContent=cache(loadLiveSiteContent);
