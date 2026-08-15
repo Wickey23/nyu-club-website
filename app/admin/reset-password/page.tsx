@@ -58,21 +58,17 @@ export default function AdminResetPasswordPage() {
     const supabase = createSupabaseBrowserClient();
     const {data:{user},error:userError}=await supabase.auth.getUser();
     if(userError||!user){setLoading(false);return setMessage("Your secure reset session expired. Request a new password reset link.");}
-    const {data:profile}=await supabase.from("profiles").select("status").eq("id",user.id).maybeSingle();
 
     const { error } = await supabase.auth.updateUser({ password });
     if (error) { setLoading(false); return setMessage(error.message); }
+
+    const {error:activateError}=await supabase.rpc("activate_own_board_profile");
+    if(activateError){setLoading(false);return setMessage(activateError.message);}
 
     const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
     if (refreshError || !refreshed.session) {
       setLoading(false);
       return setMessage("Your password was updated, but the sign-in session could not be refreshed. Please sign in with your new password.");
-    }
-
-    if(profile?.status==="invited"){
-      setMessage("Password saved. Finish your board profile to complete account setup…");
-      window.location.replace("/admin/activate?flow=profile");
-      return;
     }
 
     setMessage("Password updated. Opening your board portal…");
