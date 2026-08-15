@@ -5,7 +5,7 @@ import NewsletterSignup from "../components/NewsletterSignup";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 import { getPublicPageSettings,pageCopy } from "../lib/publicPageSettings";
 
-export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Events | ${brand}`,description:"Upcoming and past events from the NYU Peruvian Student Association, including cultural programs, community gatherings, food, music and conversations."};}
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const formal=site.settings.clubName||"NYU Peruvian Student Association";return{title:`Events | ${formal}`,description:"Upcoming and past events from the NYU Peruvian Student Association, including cultural programs, community gatherings, food, music and conversations."};}
 export const dynamic = "force-dynamic";
 const photo=(src:string)=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat"});
 const today=new Date().toISOString().slice(0,10);
