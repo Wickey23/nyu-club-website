@@ -6,6 +6,7 @@ type Slide = { image:string; title:string; description?:string };
 
 type Props = {
   slides: Slide[];
+  brand:string;
   primaryVideoUrl?: string;
   primaryPosterUrl?: string;
   secondaryVideoUrl?: string;
@@ -21,13 +22,13 @@ function VideoSlot({src,poster,label,title,copy}:{src?:string;poster?:string;lab
       </video>
     </div>;
   }
-  return <div className="home-video-placeholder" style={poster?{backgroundImage:`linear-gradient(0deg,rgba(0,0,0,.62),rgba(0,0,0,.15)),url(${poster})`}:undefined}>
+  return <div className="home-video-placeholder" style={poster?{backgroundImage:`linear-gradient(0deg,rgba(0,0,0,.68),rgba(0,0,0,.14)),url(${poster})`}:undefined}>
     <div className="home-video-play" aria-hidden="true">▶</div>
-    <div><span className="kicker light">{label}</span><h3>{title}</h3><p>{copy}</p></div>
+    <div className="home-video-placeholder-copy"><span className="kicker light">{label}</span><h3>{title}</h3><p>{copy}</p></div>
   </div>;
 }
 
-export default function HomeMediaShowcase({slides,primaryVideoUrl,primaryPosterUrl,secondaryVideoUrl,secondaryPosterUrl}:Props){
+export default function HomeMediaShowcase({slides,brand,primaryVideoUrl,primaryPosterUrl,secondaryVideoUrl,secondaryPosterUrl}:Props){
   const usableSlides = useMemo(()=>slides.filter(slide=>slide.image),[slides]);
   const [index,setIndex] = useState(0);
   const [paused,setPaused] = useState(false);
@@ -43,6 +44,7 @@ export default function HomeMediaShowcase({slides,primaryVideoUrl,primaryPosterU
   },[index,usableSlides.length]);
 
   const current = usableSlides[index];
+  const publicBrand=brand||"NYU Perú";
 
   return <>
     <section className="media-showcase-section">
@@ -52,7 +54,7 @@ export default function HomeMediaShowcase({slides,primaryVideoUrl,primaryPosterU
       </div>
       <div className="wrap media-video-grid">
         <div className="media-video-primary">
-          <VideoSlot src={primaryVideoUrl} poster={primaryPosterUrl} label="Club reel" title="A year with ¡Viva Perú!" copy="Add a club reel, event recap or vertical social video from the admin homepage editor."/>
+          <VideoSlot src={primaryVideoUrl} poster={primaryPosterUrl} label="Club reel" title={`A year with ${publicBrand}`} copy="Club reels, event recaps and social video highlights can be managed from the homepage editor."/>
         </div>
         <div className="media-video-copy">
           <span className="kicker light">Stories worth sharing</span>
