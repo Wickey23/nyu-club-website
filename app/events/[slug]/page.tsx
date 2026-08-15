@@ -14,9 +14,9 @@ function googleCalendar(event:any){if(!event.date)return "";const date=event.dat
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
   const {slug}=await params;const site=await getLiveSiteContent();const event=site.events.find(e=>(e.slug||e.id)===slug||e.id===slug);
   if(!event)return{title:"Event | NYU Peruvian Student Association"};
-  const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";
+  const formal=site.settings.clubName||"NYU Peruvian Student Association";
   const description=[event.description,fmtDate(event.date),event.location].filter(Boolean).join(" · ").slice(0,220);
-  return{title:`${event.title} | ${brand}`,description,openGraph:{title:event.title,description,type:"article",images:event.image?[{url:event.image,alt:event.title}]:undefined},twitter:{card:"summary_large_image",title:event.title,description,images:event.image?[event.image]:undefined}};
+  return{title:`${event.title} | ${formal}`,description,openGraph:{title:event.title,description,type:"article",images:event.image?[{url:event.image,alt:event.title}]:undefined},twitter:{card:"summary_large_image",title:event.title,description,images:event.image?[event.image]:undefined}};
 }
 
 export default async function EventDetail({params}:{params:Promise<{slug:string}>}){
