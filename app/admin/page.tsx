@@ -11,5 +11,5 @@ export default async function AdminPage(){
   if(!profile||profile.status!=="active"||!allowedRoles.has(profile.role))redirect("/admin/login?error=not-authorized");
   await supabase.rpc("touch_own_profile_seen");
   const canInstagram=["super_admin","admin","media_manager"].includes(profile.role);
-  return <>{canInstagram&&<a className="admin-instagram-shortcut" href="/admin/instagram">Instagram ↗</a>}<AdminDashboard adminEmail={profile.email||user.email||""} adminRole={profile.role}/></>;
+  return <>{profile.role==="super_admin"&&<a className="admin-public-pages-shortcut" href="/admin/public-pages">Public Pages ✦</a>}{canInstagram&&<a className="admin-instagram-shortcut" href="/admin/instagram">Instagram ↗</a>}<AdminDashboard adminEmail={profile.email||user.email||""} adminRole={profile.role}/></>;
 }
