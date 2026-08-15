@@ -1,14 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 
 const SITE_ORIGIN="https://nyuperu.org";
 type ActivationState="checking"|"ready"|"recovery"|"success";
 
 export default function AdminActivatePage() {
-  const router = useRouter();
   const [state,setState]=useState<ActivationState>("checking");
   const [accountEmail,setAccountEmail]=useState("");
   const [password,setPassword]=useState("");
@@ -99,10 +97,15 @@ export default function AdminActivatePage() {
     const{error:activateError}=await supabase.rpc("activate_own_board_profile");
     if(activateError){setLoading(false);return setMessage(activateError.message);}
 
-    setLoading(false);
+    const{data:refreshed,error:refreshError}=await supabase.auth.refreshSession();
+    if(refreshError||!refreshed.session){
+      setLoading(false);
+      return setMessage("Your account was activated, but the sign-in session could not be refreshed. Please sign in with the password you just created.");
+    }
+
     setState("success");
-    setMessage("Your board account is active. Redirecting to the admin dashboard…");
-    window.setTimeout(()=>{router.push("/admin");router.refresh();},900);
+    setMessage("Account activated. Opening your admin dashboard…");
+    window.location.replace("/admin");
   }
 
   return <main className="admin-login-page">
@@ -128,7 +131,6 @@ export default function AdminActivatePage() {
         <button className="admin-primary" disabled={loading}>{loading?"Sending…":"Send new setup link"}</button>
       </form>}
 
-      {state==="success"&&<a href="/admin" className="admin-primary" style={{display:"inline-block",textDecoration:"none",marginTop:8}}>Open board dashboard</a>}
       <a href="/admin/login" className="admin-back">← Back to sign in</a>
       <a href="/" className="admin-back">Back to nyuperu.org</a>
     </section>
