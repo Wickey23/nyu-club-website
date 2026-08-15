@@ -4,7 +4,7 @@ import { clubMedia } from "../lib/clubMedia";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 import { getPublicPageSettings,pageCopy } from "../lib/publicPageSettings";
 
-export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Culture | ${brand}`,description:"Explore Peruvian food, music, dance, heritage and cultural programming through the NYU Peruvian Student Association."};}
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const formal=site.settings.clubName||"NYU Peruvian Student Association";return{title:`Culture | ${formal}`,description:"Explore Peruvian food, music, dance, heritage and cultural programming through the NYU Peruvian Student Association."};}
 export const dynamic="force-dynamic";
 export default async function CulturePage(){
   const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";
