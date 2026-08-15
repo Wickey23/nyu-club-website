@@ -14,7 +14,6 @@ export default function AdminResetPasswordPage() {
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-
     (async () => {
       try {
         const search = new URLSearchParams(window.location.search);
@@ -33,10 +32,7 @@ export default function AdminResetPasswordPage() {
           const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "recovery" });
           if (error) throw error;
         } else if (accessToken && refreshToken && (hashType === "recovery" || !hashType)) {
-          const { error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
+          const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
           if (error) throw error;
         }
 
@@ -63,31 +59,30 @@ export default function AdminResetPasswordPage() {
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.auth.updateUser({ password });
+    if (error) { setLoading(false); return setMessage(error.message); }
+
+    const { error: activateError } = await supabase.rpc("activate_own_board_profile");
+    if (activateError) { setLoading(false); return setMessage(activateError.message); }
+
     setLoading(false);
-
-    if (error) return setMessage(error.message);
-
-    setMessage("Password updated. Redirecting to your admin dashboard…");
-    window.setTimeout(() => {
-      router.push("/admin");
-      router.refresh();
-    }, 700);
+    setMessage("Account ready. Redirecting to your admin dashboard…");
+    window.setTimeout(() => { router.push("/admin"); router.refresh(); }, 500);
   }
 
   return <main className="admin-login-page">
     <section className="admin-login-card">
       <img src="/nyu-peruvian-logo-v4.svg" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
-      <span className="admin-kicker">Password recovery</span>
-      <h1>Reset your password</h1>
+      <span className="admin-kicker">Password setup</span>
+      <h1>Set your board password</h1>
       <p>{message}</p>
 
       {ready && <form onSubmit={submit} className="admin-login-form">
         <label>New password<input type="password" autoComplete="new-password" value={password} onChange={(e)=>setPassword(e.target.value)} required minLength={8}/></label>
         <label>Confirm new password<input type="password" autoComplete="new-password" value={confirm} onChange={(e)=>setConfirm(e.target.value)} required minLength={8}/></label>
-        <button className="admin-primary" disabled={loading}>{loading ? "Updating…" : "Update password"}</button>
+        <button className="admin-primary" disabled={loading}>{loading ? "Activating…" : "Create / update account"}</button>
       </form>}
 
-      {!ready && <a href="/admin/login" className="admin-primary" style={{display:"inline-block",textDecoration:"none",marginTop:8}}>Request a new reset link</a>}
+      {!ready && <a href="/admin/login" className="admin-primary" style={{display:"inline-block",textDecoration:"none",marginTop:8}}>Request a new setup link</a>}
       <a href="/admin/login" className="admin-back">← Back to sign in</a>
     </section>
   </main>;
