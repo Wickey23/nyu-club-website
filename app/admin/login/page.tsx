@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "../../lib/supabase/client";
+const SITE_ORIGIN="https://nyuperu.org";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function AdminLoginPage() {
     setLoading(true); setError("");
     const supabase = createSupabaseBrowserClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/admin/reset-password`,
+      redirectTo: `${SITE_ORIGIN}/admin/reset-password`,
     });
     setLoading(false);
     setError(resetError ? resetError.message : "Password reset email sent. Open the newest email to choose a new password.");
