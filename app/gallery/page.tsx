@@ -6,7 +6,7 @@ import { getLiveSiteContent } from "../lib/liveSiteContent";
 import { getPublicPageSettings,pageCopy } from "../lib/publicPageSettings";
 import GalleryBrowser from "./GalleryBrowser";
 
-export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Gallery | ${brand}`,description:"Browse photos, videos, Instagram highlights and sourced archive media from NYU Peruvian Student Association events and community programming."};}
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const formal=site.settings.clubName||"NYU Peruvian Student Association";return{title:`Gallery | ${formal}`,description:"Browse photos, videos, Instagram highlights and sourced archive media from NYU Peruvian Student Association events and community programming."};}
 export const dynamic = "force-dynamic";
 const photo=(src:string,position="center")=>({backgroundImage:`url(${src})`,backgroundSize:"cover",backgroundPosition:position,backgroundRepeat:"no-repeat"});
 
