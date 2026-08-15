@@ -56,11 +56,12 @@ export default function AdminResetPasswordPage() {
 
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
+    const {data:{user},error:userError}=await supabase.auth.getUser();
+    if(userError||!user){setLoading(false);return setMessage("Your secure reset session expired. Request a new password reset link.");}
+    const {data:profile}=await supabase.from("profiles").select("status").eq("id",user.id).maybeSingle();
+
     const { error } = await supabase.auth.updateUser({ password });
     if (error) { setLoading(false); return setMessage(error.message); }
-
-    const { error: activateError } = await supabase.rpc("activate_own_board_profile");
-    if (activateError) { setLoading(false); return setMessage(activateError.message); }
 
     const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
     if (refreshError || !refreshed.session) {
@@ -68,7 +69,13 @@ export default function AdminResetPasswordPage() {
       return setMessage("Your password was updated, but the sign-in session could not be refreshed. Please sign in with your new password.");
     }
 
-    setMessage("Account ready. Opening your admin dashboard…");
+    if(profile?.status==="invited"){
+      setMessage("Password saved. Finish your board profile to complete account setup…");
+      window.location.replace("/admin/activate?flow=profile");
+      return;
+    }
+
+    setMessage("Password updated. Opening your board portal…");
     window.location.replace("/admin");
   }
 
@@ -82,7 +89,7 @@ export default function AdminResetPasswordPage() {
       {ready && <form onSubmit={submit} className="admin-login-form">
         <label>New password<input type="password" autoComplete="new-password" value={password} onChange={(e)=>setPassword(e.target.value)} required minLength={8}/></label>
         <label>Confirm new password<input type="password" autoComplete="new-password" value={confirm} onChange={(e)=>setConfirm(e.target.value)} required minLength={8}/></label>
-        <button className="admin-primary" disabled={loading}>{loading ? "Activating…" : "Create / update account"}</button>
+        <button className="admin-primary" disabled={loading}>{loading ? "Updating…" : "Set password"}</button>
       </form>}
 
       {!ready && <a href="/admin/login" className="admin-primary" style={{display:"inline-block",textDecoration:"none",marginTop:8}}>Request a new setup link</a>}
