@@ -5,7 +5,7 @@ import { getLiveSiteContent } from "../lib/liveSiteContent";
 import { getPublicPageSettings,pageCopy } from "../lib/publicPageSettings";
 import TeamYearFilter from "./TeamYearFilter";
 
-export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Team | ${brand}`,description:"Meet the current and past student leaders of the NYU Peruvian Student Association."};}
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const formal=site.settings.clubName||"NYU Peruvian Student Association";return{title:`Team | ${formal}`,description:"Meet the current and past student leaders of the NYU Peruvian Student Association."};}
 export const dynamic = "force-dynamic";
 
 export default async function TeamPage(){
