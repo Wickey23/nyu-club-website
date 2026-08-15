@@ -1,19 +1,27 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 
 const SITE_ORIGIN="https://nyuperu.org";
 type ActivationState="checking"|"ready"|"recovery"|"success";
+const academicYear=(start:number)=>`${start}–${start+1}`;
+const currentAcademicStart=()=>{const d=new Date();const y=d.getFullYear();return d.getMonth()>=6?y:y-1};
 
 export default function AdminActivatePage() {
   const [state,setState]=useState<ActivationState>("checking");
   const [accountEmail,setAccountEmail]=useState("");
+  const [displayName,setDisplayName]=useState("");
+  const [teamTitle,setTeamTitle]=useState("");
+  const [boardYear,setBoardYear]=useState(academicYear(currentAcademicStart()));
+  const [bio,setBio]=useState("");
   const [password,setPassword]=useState("");
   const [confirm,setConfirm]=useState("");
+  const [profileOnly,setProfileOnly]=useState(false);
   const [recoveryEmail,setRecoveryEmail]=useState("");
   const [message,setMessage]=useState("Checking your secure invitation…");
   const [loading,setLoading]=useState(false);
+  const boardYears=useMemo(()=>Array.from({length:Math.max(1,currentAcademicStart()-2016+1)},(_,i)=>academicYear(currentAcademicStart()-i)),[]);
 
   useEffect(()=>{
     const supabase=createSupabaseBrowserClient();
@@ -27,6 +35,8 @@ export default function AdminActivatePage() {
         const hashType=hash.get("type");
         const accessToken=hash.get("access_token");
         const refreshToken=hash.get("refresh_token");
+        const completingProfile=search.get("flow")==="profile";
+        setProfileOnly(completingProfile);
 
         if(code){
           const{error}=await supabase.auth.exchangeCodeForSession(code);
@@ -50,9 +60,11 @@ export default function AdminActivatePage() {
         const email=session.user.email||"";
         setAccountEmail(email);
         setRecoveryEmail(email);
-        window.history.replaceState({},document.title,"/admin/activate");
+        const {data:profile}=await supabase.from("profiles").select("display_name,status").eq("id",session.user.id).maybeSingle();
+        setDisplayName(profile?.display_name||String(session.user.user_metadata?.display_name||""));
+        window.history.replaceState({},document.title,completingProfile?"/admin/activate?flow=profile":"/admin/activate");
         setState("ready");
-        setMessage("Invitation verified. Create a password to finish setting up your board account.");
+        setMessage(completingProfile?"Finish your board profile to complete account setup.":"Invitation verified. Create your password and board profile to finish setting up your account.");
       }catch(error){
         console.error("Activation error",error);
         setState("recovery");
@@ -79,8 +91,11 @@ export default function AdminActivatePage() {
 
   async function submit(event:FormEvent){
     event.preventDefault();
-    if(password.length<8)return setMessage("Use a password with at least 8 characters.");
-    if(password!==confirm)return setMessage("The passwords do not match.");
+    if(displayName.trim().length<2)return setMessage("Enter your full name.");
+    if(teamTitle.trim().length<2)return setMessage("Enter your board position.");
+    if(!boardYear)return setMessage("Select your board year.");
+    if(!profileOnly&&password.length<8)return setMessage("Use a password with at least 8 characters.");
+    if(!profileOnly&&password!==confirm)return setMessage("The passwords do not match.");
 
     setLoading(true);
     const supabase=createSupabaseBrowserClient();
@@ -91,11 +106,20 @@ export default function AdminActivatePage() {
       return setMessage("Your secure invitation session expired. Request a fresh password setup link below.");
     }
 
-    const{error}=await supabase.auth.updateUser({password});
-    if(error){setLoading(false);return setMessage(error.message);}
+    if(!profileOnly){
+      const{error}=await supabase.auth.updateUser({password});
+      if(error&&String((error as any).code||"")!=="same_password"&&!/different from the old password/i.test(error.message)){
+        setLoading(false);return setMessage(error.message);
+      }
+    }
 
-    const{error:activateError}=await supabase.rpc("activate_own_board_profile");
-    if(activateError){setLoading(false);return setMessage(activateError.message);}
+    const{error:completeError}=await supabase.rpc("complete_own_board_account",{
+      p_display_name:displayName.trim(),
+      p_team_title:teamTitle.trim(),
+      p_board_year:boardYear,
+      p_bio:bio.trim(),
+    });
+    if(completeError){setLoading(false);return setMessage(completeError.message);}
 
     const{data:refreshed,error:refreshError}=await supabase.auth.refreshSession();
     if(refreshError||!refreshed.session){
@@ -104,7 +128,7 @@ export default function AdminActivatePage() {
     }
 
     setState("success");
-    setMessage("Account activated. Opening your admin dashboard…");
+    setMessage("Account activated and Team profile created. Opening your board portal…");
     window.location.replace("/admin");
   }
 
@@ -120,9 +144,13 @@ export default function AdminActivatePage() {
       {state==="ready"&&<>
         {accountEmail&&<div className="cms-notice"><b>Account</b><br/>{accountEmail}</div>}
         <form onSubmit={submit} className="admin-login-form">
-          <label>New password<input type="password" autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={8}/></label>
-          <label>Confirm password<input type="password" autoComplete="new-password" value={confirm} onChange={e=>setConfirm(e.target.value)} required minLength={8}/></label>
-          <button className="admin-primary" disabled={loading}>{loading?"Activating…":"Activate account"}</button>
+          <label>Full name<input value={displayName} onChange={e=>setDisplayName(e.target.value)} autoComplete="name" placeholder="Your full name" required/></label>
+          <label>Board position<input value={teamTitle} onChange={e=>setTeamTitle(e.target.value)} placeholder="e.g. Director of Marketing" required/></label>
+          <label>Board year<select value={boardYear} onChange={e=>setBoardYear(e.target.value)} required>{boardYears.map(year=><option key={year} value={year}>{year}</option>)}</select></label>
+          <label>Short bio <small>optional</small><textarea value={bio} onChange={e=>setBio(e.target.value)} placeholder="A short introduction for the Team page." rows={3}/></label>
+          {!profileOnly&&<><label>New password<input type="password" autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={8}/></label>
+          <label>Confirm password<input type="password" autoComplete="new-password" value={confirm} onChange={e=>setConfirm(e.target.value)} required minLength={8}/></label></>}
+          <button className="admin-primary" disabled={loading}>{loading?"Activating…":profileOnly?"Complete account":"Activate account"}</button>
         </form>
       </>}
 
