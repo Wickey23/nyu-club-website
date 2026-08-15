@@ -6,7 +6,7 @@ import { clubMedia } from "../lib/clubMedia";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 import { getPublicPageSettings,pageCopy } from "../lib/publicPageSettings";
 
-export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";return{title:`Community | ${brand}`,description:"Explore the NYU Peruvian Student Association community, collaborations, gatherings and ways to get involved across NYU and New York City."};}
+export async function generateMetadata():Promise<Metadata>{const site=await getLiveSiteContent();const formal=site.settings.clubName||"NYU Peruvian Student Association";return{title:`Community | ${formal}`,description:"Explore the NYU Peruvian Student Association community, collaborations, gatherings and ways to get involved across NYU and New York City."};}
 export const dynamic="force-dynamic";
 export default async function CommunityPage(){
   const site=await getLiveSiteContent();const brand=site.settings.shortName||site.settings.clubName||"NYU Perú";
