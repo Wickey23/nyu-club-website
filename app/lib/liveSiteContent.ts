@@ -11,7 +11,7 @@ async function loadLiveSiteContent(): Promise<SiteContent> {
       supabase.from("events").select("id,title,slug,event_date,start_time,end_time,location,description,details,image_url,rsvp_url,status,schedule,faq").in("status",["published","past"]).order("event_date",{ascending:false,nullsFirst:false}),
       supabase.from("team_members").select("id,name,title,bio,email,image_url,board_year,sort_order,active").order("active",{ascending:false}).order("board_year",{ascending:false,nullsFirst:false}).order("sort_order",{ascending:true}),
       supabase.from("gallery_items").select("id,title,image_url,caption,source_url,media_type,sort_order,created_at,year,album,tags,featured,event_id").eq("published",true).order("featured",{ascending:false}).order("sort_order",{ascending:true}),
-      supabase.from("site_settings").select("club_name,short_name,email,instagram,linkedin,facebook").eq("id",1).single(),
+      supabase.from("site_settings").select("club_name,short_name,email,instagram,linkedin,facebook,cms_config").eq("id",1).single(),
     ]);
 
     const error = homeResult.error || eventResult.error || teamResult.error || galleryResult.error || settingsResult.error;
@@ -34,7 +34,7 @@ async function loadLiveSiteContent(): Promise<SiteContent> {
       })),
       team:(teamResult.data||[]).map(item=>({ id:item.id,name:item.name,role:item.title,email:item.email,image:item.image_url,bio:item.bio||"",boardYear:item.board_year||"",active:item.active })),
       gallery:(galleryResult.data||[]).map(item=>({ id:item.id,title:item.title,image:item.image_url,description:item.caption,sourceUrl:item.source_url,mediaType:(item.media_type||"image") as "image"|"video",createdAt:item.created_at,year:item.year||undefined,album:item.album||"",tags:item.tags||[],featured:Boolean(item.featured),eventId:item.event_id||"" })),
-      settings:{ clubName:settings.club_name,shortName:settings.short_name,email:settings.email,instagram:settings.instagram,linkedin:settings.linkedin,facebook:settings.facebook||"" },
+      settings:{ clubName:settings.club_name,shortName:settings.short_name,email:settings.email,instagram:settings.instagram,linkedin:settings.linkedin,facebook:settings.facebook||"",cmsConfig:(settings.cms_config&&typeof settings.cms_config==="object"?settings.cms_config:{}) as Record<string,any> },
     };
   } catch {
     return {
@@ -46,6 +46,7 @@ async function loadLiveSiteContent(): Promise<SiteContent> {
         secondaryVideoUrl:fallback.homepage.secondaryVideoUrl||"",
         secondaryVideoPosterUrl:fallback.homepage.secondaryVideoPosterUrl||"",
       },
+      settings:{...fallback.settings,cmsConfig:fallback.settings.cmsConfig||{}},
       events:fallback.events.filter(item=>item.status==="published"||item.status==="past"),
     };
   }
