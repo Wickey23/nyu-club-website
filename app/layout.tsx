@@ -14,6 +14,7 @@ import "./page-polish.css";
 import "./instagram.css";
 import "./public-pages-editor.css";
 import "./team-filter.css";
+import "./site-controls.css";
 
 const sans=DM_Sans({subsets:["latin"],variable:"--font-sans",display:"swap"});
 const display=Playfair_Display({subsets:["latin"],variable:"--font-display",display:"swap"});
