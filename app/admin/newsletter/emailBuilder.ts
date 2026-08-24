@@ -2,7 +2,7 @@ import { galleryImageUrl } from "../../lib/mediaUrl";
 
 export type NewsletterEvent={id:string;title:string;date:string;time:string;location:string;description:string;image:string;rsvpUrl:string;status:string};
 export type NewsletterGalleryItem={id:string;title:string;image:string;description:string;sourceUrl?:string;mediaType?:"image"|"video";createdAt?:string};
-export type NewsletterSettings={clubName:string;shortName:string;email:string;instagram:string;linkedin:string;cmsConfig?:{newsletter?:{footerText?:string;defaultHeader?:string;signupConfirmation?:string;unsubscribeConfirmation?:string}}};
+export type NewsletterSettings={clubName:string;shortName:string;email:string;instagram:string;linkedin:string;cmsConfig?:{newsletter?:{senderName?:string;replyTo?:string;subjectPrefix?:string;footerText?:string;testRecipient?:string;defaultHeader?:string;signupConfirmation?:string;unsubscribeConfirmation?:string}}};
 
 const entities:Record<string,string>={"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"};
 export function escapeHtml(value:string){return (value||"").replace(/[&<>"']/g,(c)=>entities[c]||c);}
