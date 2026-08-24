@@ -1,40 +1,7 @@
 import Link from "next/link";
 import { getLiveSiteContent } from "../lib/liveSiteContent";
 
-const nav = [
-  ["About", "/about"], ["Events", "/events"], ["Culture", "/culture"],
-  ["Community", "/community"], ["Team", "/team"], ["Gallery", "/gallery"]
-] as const;
-
-export async function Header() {
-  const site = await getLiveSiteContent();
-  const shortName = site.settings.shortName || site.settings.clubName || "NYU Perú";
-  const clubName = site.settings.clubName || "NYU Peruvian Student Association";
-
-  return <header className="topbar">
-    <div className="wrap topbar-in">
-      <Link href="/" className="site-brand" aria-label={`${shortName} home`}>
-        <img className="site-brand-mark" src="/nyu-peruvian-logo-v4.svg" alt={`${clubName} logo`} />
-        <span className="site-brand-copy"><b>{shortName.toUpperCase()}</b><small>{clubName}</small></span>
-      </Link>
-      <nav className="desktop-nav" aria-label="Primary navigation">{nav.map(([label,href])=><Link key={label} href={href}>{label}</Link>)}<Link className="join-btn" href="/join">Join us</Link></nav>
-      <details className="mobile-nav">
-        <summary aria-label="Open navigation"><span></span><span></span><span></span></summary>
-        <div className="mobile-nav-panel">{nav.map(([label,href])=><Link key={label} href={href}>{label}</Link>)}<Link className="join-btn" href="/join">Join us</Link></div>
-      </details>
-    </div>
-  </header>;
-}
-
-export async function Footer() {
-  const site = await getLiveSiteContent();
-  const shortName = site.settings.shortName || site.settings.clubName || "NYU Perú";
-  const clubName = site.settings.clubName || "NYU Peruvian Student Association";
-  const email = site.settings.email || "peru@nyu.edu";
-
-  return <footer className="site-footer"><div className="wrap footer-grid"><div><div className="footer-brand"><img className="footer-brand-mark" src="/nyu-peruvian-logo-v4.svg" alt={`${clubName} logo`}/><span><b>{shortName.toUpperCase()}</b><small>{clubName}</small></span></div><p>Made in New York.<br/>Con orgullo peruano. 🇵🇪</p></div><div><b>Explore</b><Link href="/about">About</Link><Link href="/events">Events</Link><Link href="/culture">Culture</Link><Link href="/community">Community</Link><Link href="/gallery">Gallery</Link></div><div><b>Connect</b><Link href="/join">Join us</Link><a href={site.settings.instagram || "https://www.instagram.com/perunyu/"} target="_blank" rel="noreferrer">Instagram</a>{site.settings.facebook&&<a href={site.settings.facebook} target="_blank" rel="noreferrer">Facebook</a>}<a href={site.settings.linkedin || "https://www.linkedin.com/company/nyuperu"} target="_blank" rel="noreferrer">LinkedIn</a><a href={`mailto:${email}`}>{email}</a></div><div><b>Location</b><span>New York University</span><span>New York, NY</span><Link href="/team">Board</Link><Link href="/admin">Admin</Link></div></div><div className="wrap copyright">© {new Date().getFullYear()} {clubName}</div></footer>;
-}
-
-export function PageHero({eyebrow,title,subtitle,kind="dark"}:{eyebrow:string;title:string;subtitle:string;kind?:"dark"|"photo"}) {
-  return <section className={`page-hero ${kind}`}><div className="wrap"><span className="kicker">{eyebrow}</span><h1>{title}</h1><p>{subtitle}</p></div></section>;
-}
+const nav=[["About","/about"],["Events","/events"],["Culture","/culture"],["Community","/community"],["Team","/team"],["Gallery","/gallery"]] as const;
+export async function Header(){const site=await getLiveSiteContent();const shortName=site.settings.shortName||site.settings.clubName||"NYU Perú";const clubName=site.settings.clubName||"NYU Peruvian Student Association";const cfg=(site.settings.cmsConfig||{}) as any;const logo=cfg.branding?.primaryLogo||"/nyu-peruvian-logo-v4.svg";const joinLabel=cfg.join?.applicationsOpen===false?"Get involved":cfg.join?.ctaText||"Join us";return <header className="topbar"><div className="wrap topbar-in"><Link href="/" className="site-brand" aria-label={`${shortName} home`}><img className="site-brand-mark" src={logo} alt={`${clubName} logo`}/><span className="site-brand-copy"><b>{shortName.toUpperCase()}</b><small>{clubName}</small></span></Link><nav className="desktop-nav" aria-label="Primary navigation">{nav.map(([label,href])=><Link key={label} href={href}>{label}</Link>)}<Link className="join-btn" href="/join" data-track="join">{joinLabel}</Link></nav><details className="mobile-nav"><summary aria-label="Open navigation"><span></span><span></span><span></span></summary><div className="mobile-nav-panel">{nav.map(([label,href])=><Link key={label} href={href}>{label}</Link>)}<Link className="join-btn" href="/join" data-track="join">{joinLabel}</Link></div></details></div></header>}
+export async function Footer(){const site=await getLiveSiteContent();const shortName=site.settings.shortName||site.settings.clubName||"NYU Perú";const clubName=site.settings.clubName||"NYU Peruvian Student Association";const email=site.settings.email||"peru@nyu.edu";const cfg=(site.settings.cmsConfig||{}) as any;const logo=cfg.branding?.lightLogo||cfg.branding?.primaryLogo||"/nyu-peruvian-logo-v4.svg";const social=cfg.social||{};const footerText=cfg.website?.footerText||"Made in New York.\nCon orgullo peruano. 🇵🇪";const meeting=cfg.website?.meetingLocation||"New York University";const links=[['Instagram',site.settings.instagram],['Facebook',site.settings.facebook],['LinkedIn',site.settings.linkedin],['TikTok',social.tiktok],['YouTube',social.youtube],['NYU Engage',social.engage],['Group Chat',social.groupChat]].filter(([,url])=>Boolean(url)) as [string,string][];return <footer className="site-footer"><div className="wrap footer-grid"><div><div className="footer-brand"><img className="footer-brand-mark" src={logo} alt={`${clubName} logo`}/><span><b>{shortName.toUpperCase()}</b><small>{clubName}</small></span></div><p>{footerText.split("\n").map((line:string,i:number)=><span key={i}>{line}{i<footerText.split("\n").length-1&&<br/>}</span>)}</p></div><div><b>Explore</b><Link href="/about">About</Link><Link href="/events">Events</Link><Link href="/culture">Culture</Link><Link href="/community">Community</Link><Link href="/gallery">Gallery</Link></div><div><b>Connect</b><Link href="/join">Join us</Link>{links.map(([label,url])=><a key={label} href={url} target="_blank" rel="noreferrer" data-track="social">{label}</a>)}<a href={`mailto:${email}`} data-track="email">{email}</a></div><div><b>Location</b><span>{meeting}</span><span>New York, NY</span><Link href="/team">Board</Link><Link href="/admin">Admin</Link></div></div><div className="wrap copyright">© {new Date().getFullYear()} {clubName}</div></footer>}
+export function PageHero({eyebrow,title,subtitle,kind="dark"}:{eyebrow:string;title:string;subtitle:string;kind?:"dark"|"photo"}){return <section className={`page-hero ${kind}`}><div className="wrap"><span className="kicker">{eyebrow}</span><h1>{title}</h1><p>{subtitle}</p></div></section>}
