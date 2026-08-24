@@ -1,0 +1,80 @@
+/* Admin usability polish: clearer hierarchy, calmer forms, and less visual clutter. */
+.cms-shell{grid-template-columns:272px minmax(0,1fr);background:#f6f4f0}
+.cms-sidebar{padding:18px 14px;background:#121212;border-right:1px solid rgba(255,255,255,.05)}
+.cms-brand{padding:6px 8px 18px}
+.cms-sidebar nav{gap:4px;padding:16px 0}
+.cms-sidebar nav button,.cms-tool-link{min-height:44px;padding:11px 12px;border-radius:9px;font-size:13px;transition:background .15s ease,color .15s ease,transform .15s ease}
+.cms-sidebar nav button.active{background:#fff;color:#171514;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.cms-sidebar nav button:hover:not(.active),.cms-tool-link:hover{background:#242424;transform:translateX(2px)}
+.cms-tool-link:first-of-type{margin-top:10px;border-top:1px solid rgba(255,255,255,.1);border-radius:0;padding-top:18px}
+.cms-user{padding-top:18px}
+.cms-main{max-width:1380px;padding:30px 38px 70px}
+.cms-top{position:sticky;top:0;z-index:25;margin:0 -6px 22px;padding:12px 6px 14px;background:rgba(246,244,240,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(42,34,28,.08)}
+.cms-top h1{font-size:38px;letter-spacing:-.025em}
+.cms-actions a,.cms-actions .admin-primary{min-height:42px}
+.cms-actions .admin-primary{box-shadow:0 8px 20px rgba(201,21,37,.2)}
+.cms-notice{position:sticky;top:86px;z-index:24;box-shadow:0 10px 30px rgba(42,34,28,.08)}
+.dashboard-welcome{padding:26px 28px;border-radius:18px;background:linear-gradient(135deg,#171717,#251417)}
+.dashboard-welcome h2{font-size:31px}
+.cms-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.cms-stats article{padding:16px 18px;border-radius:14px;box-shadow:0 2px 0 rgba(35,29,24,.02)}
+.cms-stats b{font-size:29px}
+.cms-panel{padding:20px;border-radius:14px;box-shadow:0 1px 0 rgba(35,29,24,.02)}
+.cms-panel h2{font-size:25px}
+.quick-grid{gap:9px}
+.quick-grid button,.quick-link{min-height:88px;padding:16px;border-radius:12px;background:#fbfaf7}
+.quick-grid button:hover,.quick-link:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(54,44,36,.06)}
+.editor-list{gap:12px}
+.add-button{position:sticky;top:92px;z-index:20;box-shadow:0 8px 18px rgba(201,21,37,.14)}
+.editor-card,.team-editor,.gallery-media-editor{scroll-margin-top:110px}
+.editor-card-head{padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid #eee9e2}
+.editor-card-head h2{margin-bottom:0}
+.status-pill{font-size:9px;padding:5px 8px;background:#f3efe9}
+.form-stack,.editor-card{gap:14px}
+.admin-login-form label,.form-stack label,.field-grid label,.access-row label{font-size:11px;letter-spacing:.015em;color:#5f5852}
+.admin-login-form input,.form-stack input,.form-stack textarea,.form-stack select,.field-grid input,.field-grid select,.editor-card textarea,.access-row select{border-color:#ddd6ce;background:#fff;border-radius:9px;padding:11px 12px;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+.admin-login-form input:hover,.form-stack input:hover,.form-stack textarea:hover,.form-stack select:hover,.field-grid input:hover,.field-grid select:hover,.editor-card textarea:hover{border-color:#c8bdb3}
+.admin-login-form input:focus,.form-stack input:focus,.form-stack textarea:focus,.form-stack select:focus,.field-grid input:focus,.field-grid select:focus,.editor-card textarea:focus{background:#fff;border-color:#c91525;box-shadow:0 0 0 3px rgba(201,21,37,.08)}
+textarea{min-height:96px}
+.upload-field{background:#fbfaf7;border-color:#cfc4b9}
+.danger{background:transparent;border:1px solid #efcdd0;color:#a81724;padding:8px 10px}
+.danger:hover{background:#fff1f2;border-color:#dcaeb3}
+.team-editor{grid-template-columns:112px minmax(0,1fr);gap:18px}
+.team-editor>img,.member-placeholder{width:112px;height:136px}
+.gallery-guide{padding:18px 20px}
+.gallery-media-editor{grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr)}
+.gallery-media-preview{min-height:210px}
+.gallery-media-preview img,.gallery-media-preview video,.gallery-media-preview iframe{min-height:210px}
+.admin-primary,.cms-sidebar button,.quick-grid button,.danger,.gallery-add-actions button{touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(201,21,37,.24);outline-offset:2px}
+
+/* Keep secondary admin tools available without covering the editor. */
+.admin-public-pages-shortcut,.admin-facebook-shortcut,.admin-instagram-shortcut,.admin-drive-shortcut{position:fixed!important;right:16px!important;left:auto!important;z-index:70!important;min-width:142px;text-align:center;background:#171717!important;color:#fff!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:10px!important;padding:9px 12px!important;font-size:11px!important;font-weight:800!important;box-shadow:0 10px 26px rgba(0,0,0,.16)!important;opacity:.9;transition:opacity .15s ease,transform .15s ease,background .15s ease}
+.admin-public-pages-shortcut:hover,.admin-facebook-shortcut:hover,.admin-instagram-shortcut:hover,.admin-drive-shortcut:hover{opacity:1;transform:translateY(-1px);background:#c91525!important}
+.admin-drive-shortcut{bottom:16px!important}
+.admin-instagram-shortcut{bottom:58px!important}
+.admin-facebook-shortcut{bottom:100px!important}
+.admin-public-pages-shortcut{bottom:142px!important}
+
+@media(max-width:1050px){
+ .cms-main{padding-left:28px;padding-right:28px}
+ .cms-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:800px){
+ .cms-main{padding:0 14px 82px}
+ .cms-top{position:static;background:transparent;border:0;padding:0;margin-bottom:18px;backdrop-filter:none}
+ .cms-notice{top:66px}
+ .add-button{top:66px}
+ .team-editor{grid-template-columns:1fr}
+ .team-editor>img,.member-placeholder{width:100%;height:260px}
+ .admin-public-pages-shortcut,.admin-facebook-shortcut,.admin-instagram-shortcut,.admin-drive-shortcut{display:none!important}
+}
+@media(max-width:560px){
+ .cms-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .cms-stats article{padding:13px}
+ .cms-stats b{font-size:25px}
+ .cms-panel{padding:16px}
+ .quick-grid button,.quick-link{min-height:76px}
+ .editor-card-head{gap:10px}
+ .editor-card-head .danger{flex:0 0 auto}
+}
