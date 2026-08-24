@@ -26,7 +26,7 @@ export type SiteContent = {
   events: EventItem[];
   team: TeamItem[];
   gallery: GalleryItem[];
-  settings: { clubName: string; shortName: string; email: string; instagram: string; linkedin: string; facebook: string };
+  settings: { clubName: string; shortName: string; email: string; instagram: string; linkedin: string; facebook: string; cmsConfig?: Record<string,any> };
 };
 
 export const siteContent = raw as SiteContent;
