@@ -41,6 +41,21 @@ textarea{min-height:96px}
 .danger:hover{background:#fff1f2;border-color:#dcaeb3}
 .team-editor{grid-template-columns:112px minmax(0,1fr);gap:18px}
 .team-editor>img,.member-placeholder{width:112px;height:136px}
+.team-year-list{display:grid;gap:10px}
+.team-year-group{border:1px solid #e4ddd5;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 1px 0 rgba(35,29,24,.02)}
+.team-year-group.open{border-color:#d8cec4;box-shadow:0 8px 24px rgba(48,39,31,.05)}
+.team-year-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border:0;background:#fff;color:#171514;text-align:left;cursor:pointer}
+.team-year-toggle:hover{background:#fbfaf7}
+.team-year-toggle>div{display:grid;gap:4px}
+.team-year-title{display:flex;align-items:center;gap:9px;font-family:Georgia,serif;font-size:22px;font-weight:700}
+.team-year-title b{font-family:Arial,sans-serif;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:#c91525;color:#fff;padding:5px 7px;border-radius:999px}
+.team-year-meta{font-size:11px;color:#77706a;font-weight:700}
+.team-year-chevron{font-size:22px;line-height:1;transition:transform .18s ease}
+.team-year-group.open .team-year-chevron{transform:rotate(180deg)}
+.team-year-members{display:grid;gap:10px;padding:0 10px 10px;border-top:1px solid #eee8e1;background:#f8f6f2}
+.team-year-members .team-editor{margin-top:10px;background:#fff}
+.team-year-empty{display:grid;gap:4px;padding:24px 20px;color:#6f685f}
+.team-year-empty b{color:#28221e}
 .gallery-guide{padding:18px 20px}
 .gallery-media-editor{grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr)}
 .gallery-media-preview{min-height:210px}
@@ -67,6 +82,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .add-button{top:66px}
  .team-editor{grid-template-columns:1fr}
  .team-editor>img,.member-placeholder{width:100%;height:260px}
+ .team-year-toggle{padding:16px}
+ .team-year-title{font-size:19px}
  .admin-public-pages-shortcut,.admin-facebook-shortcut,.admin-instagram-shortcut,.admin-drive-shortcut{display:none!important}
 }
 @media(max-width:560px){
@@ -77,4 +94,5 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .quick-grid button,.quick-link{min-height:76px}
  .editor-card-head{gap:10px}
  .editor-card-head .danger{flex:0 0 auto}
+ .team-year-title{align-items:flex-start;flex-direction:column;gap:5px}
 }
