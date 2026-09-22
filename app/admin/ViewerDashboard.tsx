@@ -4,7 +4,7 @@ export default function ViewerDashboard({adminEmail}:{adminEmail:string}){
   async function logout(){await fetch("/api/admin/logout",{method:"POST"});window.location.href="/admin/login"}
   return <main className="cms-shell">
     <aside className="cms-sidebar open">
-      <div className="cms-brand"><img src="/nyu-peruvian-logo-v4.svg" alt=""/><div><b>NYU Perú</b><span>Board portal</span></div></div>
+      <div className="cms-brand"><img src="/nyu-peruvian-logo.webp" alt=""/><div><b>NYU Perú</b><span>Board portal</span></div></div>
       <nav><button className="active">Dashboard</button></nav>
       <div className="cms-user"><span>Viewer</span><b>{adminEmail}</b><button onClick={logout}>Sign out</button></div>
     </aside>
