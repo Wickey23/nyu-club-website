@@ -116,7 +116,7 @@ export default function AdminActivatePage(){
 
   return <main className="admin-login-page">
     <section className="admin-login-card">
-      <img src="/nyu-peruvian-logo-v4.svg" alt="NYU Peruvian Student Association logo" className="admin-login-logo"/>
+      <img src="/nyu-peruvian-logo.webp" alt="NYU Peruvian Student Association logo" className="admin-login-logo"/>
       <span className="admin-kicker">Board account</span>
       <h1>{state==="success"?"Account activated":"Activate your account"}</h1>
       <p>{message}</p>
