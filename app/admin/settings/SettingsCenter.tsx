@@ -6,7 +6,7 @@ type Settings={clubName:string;shortName:string;email:string;instagram:string;li
 type Section="General"|"Website"|"Team"|"Events"|"Media"|"Join"|"Social"|"Newsletter"|"SEO"|"Analytics"|"Publishing"|"Admin"|"System";
 const sections:Section[]=["General","Website","Team","Events","Media","Join","Social","Newsletter","SEO","Analytics","Publishing","Admin","System"];
 const defaults:Settings={clubName:"",shortName:"",email:"",instagram:"",linkedin:"",facebook:"",cmsConfig:{
- branding:{theme:"classic",primaryLogo:"/nyu-peruvian-logo-v4.svg",lightLogo:"/nyu-peruvian-logo-v4.svg",favicon:"",defaultHeroImage:"",defaultEventImage:"",defaultMemberImage:""},
+ branding:{theme:"classic",primaryLogo:"/nyu-peruvian-logo.webp",lightLogo:"/nyu-peruvian-logo.webp",favicon:"",defaultHeroImage:"",defaultEventImage:"",defaultMemberImage:""},
  website:{maintenanceMode:false,maintenanceMessage:"We’ll be back shortly.",custom404:"We couldn’t find that page.",footerText:"",contactEmail:"",meetingLocation:"NYU · New York",defaultRsvpUrl:"",linkInBio:""},
  board:{currentYear:"2026–2027",showEmails:true,showBios:true,showLinkedIn:false,hideEmptyYears:true,autoArchiveOnAdvance:true,positionOrder:"President\nVice President\nTreasurer\nSecretary\nBoard Member"},
  announcement:{enabled:false,message:"",url:"",expiresAt:""},
