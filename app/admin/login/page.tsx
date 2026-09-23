@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
 
   return <main className="admin-login-page">
     <section className="admin-login-card">
-      <img src="/nyu-peruvian-logo-v4.svg" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
+      <img src="/nyu-peruvian-logo.webp" alt="NYU Peruvian Student Association logo" className="admin-login-logo" />
       <span className="admin-kicker">Board portal</span>
       <h1>Admin sign in</h1>
       <p>Sign in with the email address that was approved by a club administrator.</p>
