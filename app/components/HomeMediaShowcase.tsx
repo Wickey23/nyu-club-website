@@ -8,7 +8,7 @@ type Props = { slides:Slide[]; brand:string; primaryVideoUrl?:string; primaryPos
 function VideoSlot({src,poster,label,title,copy,showLogo=false}:{src?:string;poster?:string;label:string;title:string;copy:string;showLogo?:boolean}){
   if(src){return <div className="home-video-frame"><video controls playsInline preload="metadata" poster={poster||undefined}><source src={src}/>Your browser does not support embedded video.</video></div>}
   return <div className="home-video-placeholder" style={poster?{backgroundImage:`linear-gradient(0deg,rgba(0,0,0,.68),rgba(0,0,0,.14)),url(${poster})`}:undefined}>
-    <div className="home-video-topline">{showLogo&&<img className="home-video-logo" src="/nyu-peruvian-logo-v4.svg" alt=""/>}<div className="home-video-play" aria-hidden="true">▶</div></div>
+    <div className="home-video-topline">{showLogo&&<img className="home-video-logo" src="/api/brand/logo" alt=""/>}<div className="home-video-play" aria-hidden="true">▶</div></div>
     <div className="home-video-placeholder-copy"><span className="kicker light">{label}</span><h3>{title}</h3><p>{copy}</p></div>
   </div>;
 }
