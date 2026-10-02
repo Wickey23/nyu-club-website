@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "../../../lib/supabase/server";
 
 export const dynamic="force-dynamic";
-const FALLBACK="/nyu-peruvian-logo-v4.svg";
+const FALLBACK="/nyu-peruvian-logo-v5.svg";
 
 export async function GET(request:Request){
   try{
